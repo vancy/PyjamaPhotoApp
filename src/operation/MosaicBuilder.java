@@ -1,4 +1,4 @@
-package application;
+package operation;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -8,6 +8,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import application.ImagePanelItem;
+import application.flickr.ImageCombo;
 
 public class MosaicBuilder {
 
@@ -47,13 +50,6 @@ public class MosaicBuilder {
 		g4.drawImage(mosaicLarge.getScaledInstance(imageMedium.getWidth(null), imageMedium.getHeight(null), Image.SCALE_DEFAULT), null, null);
 
 		return new ImageCombo(mosaicLarge, mosaicSquare, mosaicMedium);
-	}
-
-
-
-// Parallel wrapper for sequential implementation of Image Mosaic 
-	public static ImageCombo buildImageMosaicTask(ImagePanelItem panel, List<PaletteItem> palette, int density, int parallelism) {
-		return buildImageMosaic(panel, palette, density);
 	}
 
 // Sequential implementation of Image Mosaic 
@@ -116,11 +112,6 @@ public class MosaicBuilder {
 		} else {
 			return new ImageCombo(panel.getImageLarge(), panel.getImageSquare(), panel.getImageMedium());
 		}
-	}
-
-// Parallel wrapper for parallel implementation of Image Mosaic split by cell
-	public static ImageCombo buildImageMosaicTask2(ImagePanelItem panel, List<PaletteItem> palette, int density, int parallelism) {
-		return buildImageMosaic2(panel, palette, density);
 	}
 
 // Parallel implementation of Image Mosaic split by cell
@@ -201,11 +192,6 @@ public class MosaicBuilder {
 		g3.drawImage(palette.get(closest).getImage(), x * size, y * size, null);
 	}
 
-// Parallel wrapper for parallel implementation of Image Mosaic split by row
-	public static ImageCombo buildImageMosaicTask3(ImagePanelItem panel, List<PaletteItem> palette, int density, int parallelism) {
-		return buildImageMosaic3(panel, palette, density);
-	}
-
 // Parallel implementation of Image Mosaic split by row
 	public static ImageCombo buildImageMosaic3(ImagePanelItem panel, List<PaletteItem> palette, int density) {
 		if (!palette.isEmpty()) {
@@ -284,11 +270,6 @@ public class MosaicBuilder {
 		}
 	}
 
-// Parallel wrapper for parallel implementation of Image Mosaic split by column
-	public static ImageCombo buildImageMosaicTask4(ImagePanelItem panel, List<PaletteItem> palette, int density, int parallelism) {
-		return buildImageMosaic4(panel, palette, density);
-	}
-
 // Parallel implementation of Image Mosaic split by column
 	public static ImageCombo buildImageMosaic4(ImagePanelItem panel, List<PaletteItem> palette, int density) {
 		if (!palette.isEmpty()) {
@@ -365,11 +346,6 @@ public class MosaicBuilder {
 			}
 			g3.drawImage(palette.get(closest).getImage(), x * size, y * size, null);
 		}
-	}
-
-
-	public static List<PaletteItem> buildMosaicPaletteItemTask(ImagePanelItem panel, List<PaletteItem> palette, int size) {
-		return buildMosaicPaletteItem(panel, palette, size);
 	}
 
 	public static List<PaletteItem> buildMosaicPaletteItem(ImagePanelItem panel, List<PaletteItem> palette, int size) {

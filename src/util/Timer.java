@@ -1,4 +1,4 @@
-package application;
+package util;
 
 public class Timer {
 
@@ -34,8 +34,6 @@ public class Timer {
 	public void taskComplete() {
 		completedTasks++;
 		if (completedTasks == totalTasks) {
-			ModePanel.overlayText("Last " + description + "operation took "
-					+ (System.currentTimeMillis() - initTime) + "ms");
 			System.out.println("Last " + description + "operation took "
 					+ (System.currentTimeMillis() - initTime) + "ms");
 		}

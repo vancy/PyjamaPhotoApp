@@ -1,8 +1,8 @@
-package application;
+package operation;
 
 import java.awt.image.BufferedImage;
 
-class PaletteItem implements Comparable<PaletteItem> {
+public class PaletteItem implements Comparable<PaletteItem> {
 
 	private Integer color;
 	private BufferedImage image;

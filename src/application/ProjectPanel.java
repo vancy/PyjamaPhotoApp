@@ -6,11 +6,12 @@ import javax.swing.JPanel;
 
 public class ProjectPanel extends JPanel {
 
+	private static final long serialVersionUID = 1L;
 	protected String projectName;
 	protected boolean isSaved = false;
 	protected boolean isModified = true;
 	protected MainFrame mainFrame;
-	protected File projectDir = new File("/home/lxuser/Downloads/small");
+	protected File projectDir = new File("~/SimplePhotoAppDownload/");
 
 	public ProjectPanel(MainFrame mainFrame, String projectName) {
 		this.mainFrame = mainFrame;

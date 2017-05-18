@@ -37,7 +37,6 @@ public class MainFrame extends JFrame {
 	private int nextUntitledNum = 0;
 
 	private JTabbedPane pane = new JTabbedPane();
-	private ModePanel mode = new ModePanel(this);
 
 	public static boolean isParallel = false;
 
@@ -88,21 +87,20 @@ public class MainFrame extends JFrame {
 		getContentPane().add(pane, BorderLayout.CENTER);
 		setResizable(false);
 
-		getContentPane().add(mode, BorderLayout.SOUTH);
-
 		// for testing, to save time
 		// newSearchProject();
 		// newImageProject();
 	}
 
 	private Action actionShowAbout = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			String message = "<html><font color=#8888ff size=+2>"
 					+ applicationName + "</font><p><p>";
 			message += "Version: " + applicationVersion + "<p><p>";
-			message += "Copyright&copy 2009 Nasser Giacaman, Peter Nicolau and Oliver Sinnen<p><p>";
-			message += "Sample application developed with ParaTask.<p>";
+			message += "Copyright&copy 2017 Nasser Giacaman, Peter Nicolau, Xing Fan, and Oliver Sinnen<p><p>";
+			message += "Sample application developed with Pyjama.<p>";
 			message += "Visit <u><i>http://www.ece.auckland.ac.nz/~sinnen</i></u> for more information";
 			JLabel label = new JLabel(message);
 			JOptionPane.showMessageDialog(MainFrame.this, label, "About "
@@ -111,16 +109,8 @@ public class MainFrame extends JFrame {
 		}
 	};
 
-	private void showFutureWork() {
-		String message = "<html><font color=#8888ff size=+2>Future release</font><p><p>";
-		message += "Check back in a future release!<p><p>";
-		JLabel label = new JLabel(message);
-		label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		JOptionPane.showMessageDialog(MainFrame.this, label, "Future release",
-				JOptionPane.PLAIN_MESSAGE, new ImageIcon("images/tools.png"));
-	}
-
 	private Action actionFutureWork = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			showFutureWork();
@@ -128,6 +118,7 @@ public class MainFrame extends JFrame {
 	};
 
 	private Action actionNewSearchProject = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			newSearchProject();
@@ -135,6 +126,7 @@ public class MainFrame extends JFrame {
 	};
 
 	private Action actionNewImageProject = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			newImageProject();
@@ -142,6 +134,7 @@ public class MainFrame extends JFrame {
 	};
 
 	private Action actionExit = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			checkExit();
@@ -149,6 +142,7 @@ public class MainFrame extends JFrame {
 	};
 
 	private Action actionCloseCurrentProject = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			closeCurrentProject();
@@ -156,6 +150,7 @@ public class MainFrame extends JFrame {
 	};
 
 	private Action actionPrintCurrentProject = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			showFutureWork();
@@ -163,6 +158,7 @@ public class MainFrame extends JFrame {
 	};
 
 	private Action actionSaveCurrentProject = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			saveCurrentProject();
@@ -324,6 +320,15 @@ public class MainFrame extends JFrame {
 				}
 			}
 		}
+	}
+	
+	private void showFutureWork() {
+		String message = "<html><font color=#8888ff size=+2>Future release</font><p><p>";
+		message += "Check back in a future release!<p><p>";
+		JLabel label = new JLabel(message);
+		label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		JOptionPane.showMessageDialog(MainFrame.this, label, "Future release",
+				JOptionPane.PLAIN_MESSAGE, new ImageIcon("images/tools.png"));
 	}
 
 	private void addMenus() {

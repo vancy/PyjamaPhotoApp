@@ -4,6 +4,7 @@ import java.awt.*;
 
 public class ZoomCanvas extends Canvas {
 
+	private static final long serialVersionUID = 1L;
 	private boolean firstRun = true;
 	private Image image;
 	private ZoomListener zoomListener;

@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.util.concurrent.ExecutionException;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -25,9 +24,12 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import application.flickr.ImageCombo;
+
 
 public class ImagePanelItem extends JPanel implements ChangeListener {
 
+	private static final long serialVersionUID = 1L;
 	private File file;
 	private ImageProjectPanel parentPanel;
 	private Image imageSquare;
@@ -37,22 +39,12 @@ public class ImagePanelItem extends JPanel implements ChangeListener {
 	private Image imageMediumOriginal;
 	private Image imageMedium;
 
-//	private TaskIDGroup<Image> history = new TaskIDGroup<Image>();
-
 	public static int imageSize = 180;
 
 	private JCheckBox checkBox = new JCheckBox();
 	private JLabel lblImage;
 
 	private static int height = 250;
-
-//	public TaskIDGroup<Image> getHistory() {
-//		return history;
-//	}
-
-//	public void addToHistory(TaskID job) {
-//		history.add(job);
-//	}
 
 	private boolean isModified = false;
 
@@ -79,16 +71,6 @@ public class ImagePanelItem extends JPanel implements ChangeListener {
 	public boolean isSelected() {
 		return checkBox.isSelected();
 	}
-
-//	public void setImageTask(TaskID<ImageCombo> id) {
-//		try {
-//			setImage(id.getReturnResult());
-//		} catch (ExecutionException e) {
-//			e.printStackTrace();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	public void setImage(ImageCombo combo) {
 		this.imageLarge = combo.getImageLarge();
@@ -124,9 +106,8 @@ public class ImagePanelItem extends JPanel implements ChangeListener {
 		if (lblImage != null)
 			remove(lblImage);
 
-		// System.out.println("1");
+
 		lblImage = new JLabel(new ImageIcon(imageSquare));
-		// System.out.println("1");
 		lblImage.setEnabled(checkBox.isSelected());
 
 		add(lblImage);

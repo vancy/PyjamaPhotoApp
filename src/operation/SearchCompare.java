@@ -1,7 +1,6 @@
-package application;
+package operation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.awt.Color;
@@ -9,6 +8,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
+
+import application.PhotoPanelItem;
 
 public class SearchCompare {
 

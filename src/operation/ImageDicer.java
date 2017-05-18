@@ -1,5 +1,5 @@
 //Comment out the following package statement to compile separately.
-package application;
+package operation;
 
 /**
  * ImageDicer provides a grab-bag of image processing operators.

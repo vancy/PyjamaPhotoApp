@@ -1,4 +1,4 @@
-package application;
+package application.flickr;
 
 import java.awt.Image;
 

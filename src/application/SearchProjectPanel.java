@@ -37,10 +37,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import com.flickr4java.flickr.photos.Photo;
-import com.flickr4java.flickr.photos.PhotoList;
-
 import application.flickr.Search;
+import operation.SearchCompare;
+import util.Timer;
 
 public class SearchProjectPanel extends ProjectPanel implements ActionListener {
 
@@ -57,7 +56,7 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
 	private JButton btnStop = new JButton(new ImageIcon("images/stop.png"));
 	private JSpinner spnResultsPerPage;
 	private JLabel lblResPP = new JLabel("#pics");
-//	private JSpinner spnPageOffset;
+
 	private JButton btnNext = new JButton(new ImageIcon("images/right.png"));
 	private JButton btnPrev = new JButton(new ImageIcon("images/left.png"));
 	private JTextField txtCurrentPage = new JTextField("-",7);
@@ -91,7 +90,7 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
 		txtSearch.setForeground(Color.GRAY);
 		
 		JPanel panelSearch = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
-		//panelSearch.add(new JLabel(new ImageIcon("images/flickr.jpg")));
+
 		panelSearch.add(txtSearch);
 		
 		progressBar.setStringPainted(true);
@@ -208,17 +207,6 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
         thumbnailsPanel.removeAll();
         thumbnailsPanel.updateUI();
 	}
-	/*
-    private void displayResultsTask(TaskID<List<PhotoWithImage>> id) {
-        try {
-            displayResults(id.getReturnResult());
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-    */
 
 	private void finishedSearch() {
         txtCurrentPage.setText("page " + (currentOffset));
@@ -226,29 +214,13 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
         isModified = true;
         mainFrame.updateTabIcons();
         enableButtons();
-//        currentSearch = null;
 	}
 	
- //   private void displayResults(List<PhotoWithImage> list) {
- //       for (PhotoWithImage pi : list) {
-  //      	addToDisplay(pi);
-  //      }
-  //  }
 	
-    public void addToDisplay(PhotoWithImage pi) {
+    private void addToDisplay(PhotoWithImage pi) {
     	thumbnailsPanel.add(new PhotoPanelItem(pi.getPhoto(), pi.getImage(), projectDir, this));
     }
-    
-	
-//	TASK_INTERACTIVE private PhotoList doSearchTask(String search, int resultsPP, int offset) {
-//		return doSearch(search, resultsPP, offset);
-//	}
-	
-	
-//	private PhotoList doSearch(String search, int resultsPP, int offset) {
-//		return Search.search(search, resultsPP, offset);
-//	}
-	
+    	
     private void enableButtons() {
         btnStop.setEnabled(false);
         btnSearch.setEnabled(true);
@@ -263,13 +235,13 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
     }
     
     // intermediate result
-    private void receiveIntermediate( PhotoWithImage pi) {
-    	addToDisplay(pi);
- //       progressBar.setValue(id.getProgress());
-        updateUI();
-        
-   //     System.out.println("Intermediate result: "+pi.getPhoto().getTitle());
-    }
+//    private void receiveIntermediate( PhotoWithImage pi) {
+//    	addToDisplay(pi);
+//        progressBar.setValue(id.getProgress());
+//        updateUI();
+//        
+//        System.out.println("Intermediate result: "+pi.getPhoto().getTitle());
+//    }
     
     
 	private void search() {
@@ -277,32 +249,25 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
 		String search = txtSearch.getText();
 		int resPP = (Integer)spnResultsPerPage.getValue();
 		
-		if (MainFrame.isParallel) {
-//			TaskID<List<PhotoWithImage>> id = Search.searchTask(search, resPP, currentOffset) notify(finishedSearch());
-//			currentSearch = Search.searchTask(search, resPP, currentOffset) 
-//				notify(finishedSearch(), timer::taskComplete())
-//				notify(displayResultsTask(TaskID), enableButtons())
-//				notifyInter(receiveIntermediate(TaskID,PhotoWithImage));
-				
-		} else {
-		
-        	setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        	
-			List<PhotoWithImage> results = Search.search(search, resPP, currentOffset);
-            //displayResults(results);
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+		List<PhotoWithImage> results = Search.search(search, resPP, currentOffset);
+ 
+        for (PhotoWithImage pi : results) {
+        	addToDisplay(pi);
+        }
             
-         	for (PhotoWithImage pi : results) {
-        		addToDisplay(pi);
-        	}
+        progressBar.setValue(100);
+        finishedSearch();
             
-        	progressBar.setValue(100);
-            finishedSearch();
-            //enableButtons();
-            
-            setCursor(Cursor.getDefaultCursor());
-            timer.taskComplete();
-		}
+        setCursor(Cursor.getDefaultCursor());
+        timer.taskComplete();
+	
     }
+	
+	private void stopSearch() {
+		Timer timer = new Timer("Stop-Search");
+		timer.taskComplete();
+	}
     
     private void disableButtons() {
         btnStop.setEnabled(true);
@@ -314,17 +279,12 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
         spnResultsPerPage.setEnabled(false);
     }
 
-//    private TaskID<List<PhotoWithImage>> currentSearch = null;
     
     @Override
     public void actionPerformed(ActionEvent e) {
     	if (e.getSource() == btnStop) {
-//    		if (currentSearch != null) {
-//    			currentSearch.cancelAttempt();
-//    		} else {
-//    			JOptionPane.showMessageDialog(this, "Sorry, cancel currently only works with ParaTask.");
-//    		}
-    	} else {
+    		stopSearch();
+    	} else { //It must be a kind of "search"
             clearResults();
             disableButtons();
             if (e.getSource() == btnSearch) {

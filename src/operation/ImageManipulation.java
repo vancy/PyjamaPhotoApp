@@ -1,4 +1,4 @@
-package application;
+package operation;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -8,6 +8,12 @@ import java.awt.image.BufferedImageOp;
 import java.awt.image.ConvolveOp;
 import java.io.*;
 import javax.imageio.ImageIO;
+
+import application.ImagePanelItem;
+import application.MainFrame;
+import application.flickr.ImageCombo;
+import util.Complex;
+
 import java.awt.image.Kernel;
 import java.awt.image.LookupOp;
 import java.awt.image.ShortLookupTable;
@@ -15,16 +21,10 @@ import java.awt.image.ShortLookupTable;
 public class ImageManipulation {
 	
 	public static void timeWaster(int n) {
-	    long start = System.currentTimeMillis();
-	    
-		newton(n);	
-	    
+	    long start = System.currentTimeMillis(); 
+		newton(n);		    
 		long end = System.currentTimeMillis();
-//	    System.out.println("Time waster took "+(end-start)+"ms.");
-	}
-	
-	public static ImageCombo invertTask(ImagePanelItem panel) {
-		return invert(panel);
+	    System.out.println("Time waster took "+(end-start)+"ms.");
 	}
 	
     public static ImageCombo invert(ImagePanelItem panel) {
@@ -55,10 +55,6 @@ public class ImageManipulation {
         return combo;
     }
 	
-	public static ImageCombo edgeDetectTask(ImagePanelItem panel) {
-		return edgeDetect(panel);
-	}
-	
     public static ImageCombo edgeDetect(ImagePanelItem panel) {
         Image imageLarge = panel.getImageLarge();
         float[] kernel = { 0.0f, -1.0f, 0.0f, -1.0f, 4.0f, -1.0f, 0.0f, -1.0f, 0.0f };
@@ -84,25 +80,7 @@ public class ImageManipulation {
         timeWaster(MainFrame.timeWasterSize);
         return combo;
     }
-    
-//    public static Image getSmallSquareTask(TaskID<Image> image) {
-//    	try {
-//    		return getSmallSquare(image.getReturnResult());
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//    }
-    
-//    public static Image getMediumTask(TaskID<Image> image) {
-//    	try {
-//    		return getMedium(image.getReturnResult());
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			return null;
-//		}
-//    }
-    
+        
     public static Image getMedium(Image image) {
         int w = image.getWidth(null);
         int h = image.getHeight(null);
@@ -120,8 +98,7 @@ public class ImageManipulation {
         buf.getGraphics().drawImage(im, 0, 0, null);
         return buf;
     }
-
-    
+  
     public static Image getSmallSquare(Image image) {
         Image im = image.getScaledInstance(ImagePanelItem.imageSize, ImagePanelItem.imageSize, Image.SCALE_SMOOTH);
         BufferedImage buf = new BufferedImage(im.getWidth(null), im.getHeight(null), BufferedImage.TYPE_INT_RGB);
@@ -129,9 +106,6 @@ public class ImageManipulation {
         return buf;
     }
     
-    public static Image getImageFullTask(File file) {
-    	return getImageFull(file);
-    }
     public static Image getImageFull(File file) {
     	try {
 			return ImageIO.read(file);
@@ -140,11 +114,7 @@ public class ImageManipulation {
 		}
 		return null;
     }
-	
-	public static ImageCombo sharpenTask(ImagePanelItem panel) {
-		return sharpen(panel);
-	}
-	
+		
     public static ImageCombo sharpen(ImagePanelItem panel) {
         Image imageLarge = panel.getImageLarge();
         float[] sharpKernel = { 0.0f, -1.0f, 0.0f, -1.0f, 5.0f, -1.0f, 0.0f, -1.0f, 0.0f };
@@ -170,9 +140,6 @@ public class ImageManipulation {
         return combo;
     }
 	
-	public static ImageCombo blurTask(ImagePanelItem panel) {
-		return blur(panel);
-	}
 	public static ImageCombo blur(ImagePanelItem panel) {
         Image imageLarge = panel.getImageLarge();
         float ninth = 1.0f / 9.0f;

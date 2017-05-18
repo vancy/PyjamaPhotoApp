@@ -1,4 +1,4 @@
-package application;
+package util;
 
 /*************************************************************************
  * Compilation: javac Complex.java Execution: java Complex
