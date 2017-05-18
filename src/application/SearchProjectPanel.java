@@ -61,7 +61,7 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
 	private JButton btnPrev = new JButton(new ImageIcon("images/left.png"));
 	private JTextField txtCurrentPage = new JTextField("-",7);
 	
-    private JProgressBar progressBar = new JProgressBar(0,100);
+    public JProgressBar progressBar = new JProgressBar(0,100);
 	private JPanel thumbnailsPanel;
 	private Font userFont;
 	private Font emptyFont;
@@ -250,7 +250,7 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
 		int resPP = (Integer)spnResultsPerPage.getValue();
 		
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-		List<PhotoWithImage> results = Search.search(search, resPP, currentOffset);
+		List<PhotoWithImage> results = Search.search(search, resPP, currentOffset, this);
  
         for (PhotoWithImage pi : results) {
         	addToDisplay(pi);

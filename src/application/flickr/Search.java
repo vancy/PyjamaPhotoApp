@@ -3,6 +3,8 @@ package application.flickr;
 import java.awt.Image;
 import java.util.*;
 
+import javax.swing.JProgressBar;
+
 import com.flickr4java.flickr.*;
 import com.flickr4java.flickr.Flickr;
 import com.flickr4java.flickr.FlickrException;
@@ -11,6 +13,8 @@ import com.flickr4java.flickr.photos.PhotoList;
 import com.flickr4java.flickr.photos.PhotosInterface;
 import com.flickr4java.flickr.photos.SearchParameters;
 import com.flickr4java.flickr.photos.Size;
+
+import application.SearchProjectPanel;
 
 public class Search {
 	
@@ -81,7 +85,7 @@ public class Search {
 		return image;
 	}
 		
-    public static List<PhotoWithImage> search(String str, int picsPerPage, int pageOffset) {
+    public static List<PhotoWithImage> search(String str, int picsPerPage, int pageOffset, SearchProjectPanel panel) {
 		try {
 			SearchParameters sp = new SearchParameters();
 			sp.setText(str);
@@ -92,6 +96,11 @@ public class Search {
 				Image image = Search.getSquareImage(p);
 				PhotoWithImage pi = new PhotoWithImage(p, image);
 				list.add(pi);
+				//#omp target virtual(edt) nowait
+				{
+					panel.progressBar.setValue((int) ((i + 1.0) / pl.size() * 100));
+					panel.updateUI();
+				}
 			}
 			return list;
 		} catch (FlickrException e) {

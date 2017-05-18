@@ -172,6 +172,52 @@ public class ImageProjectPanel extends ProjectPanel {
 		return btn;
 	}
 	
+	public void updateActions() {
+		
+		boolean empty = true;
+		boolean somethingSelected = false;
+		boolean allSelected = false;
+		boolean paletteReady = false;
+		
+		if (thumbnailsPanel != null) {
+			Component[] comps = thumbnailsPanel.getComponents();
+			if (comps.length != 0) {
+				empty = false;
+				somethingSelected = getSelectedPanels().size() > 0;
+				allSelected = getSelectedPanels().size() == comps.length;
+				paletteReady = palette.size() > 0;
+			} 
+		}
+		
+		if (!empty) {
+			actionSelectAll.setEnabled(!allSelected);
+			actionRemoveImage.setEnabled(somethingSelected);
+			actionSelectNone.setEnabled(somethingSelected);
+			actionInvert.setEnabled(somethingSelected);
+			actionApplyEdge.setEnabled(somethingSelected);
+			actionBlur.setEnabled(somethingSelected);
+			actionSharpen.setEnabled(somethingSelected);
+			actionBuildMosaic.setEnabled(somethingSelected);
+			actionBuildImageMosaic.setEnabled(somethingSelected && paletteReady);
+			actionBuildPalette.setEnabled(somethingSelected && !paletteReady);
+			actionClearPalette.setEnabled(paletteReady);
+		} else {
+			actionSelectAll.setEnabled(false);
+			actionSelectNone.setEnabled(false);
+			actionRemoveImage.setEnabled(false);
+			actionInvert.setEnabled(false);
+			actionApplyEdge.setEnabled(false);
+			actionBlur.setEnabled(false);
+			actionSharpen.setEnabled(false);
+			actionBuildMosaic.setEnabled(false);
+			actionBuildImageMosaic.setEnabled(false);
+			actionBuildPalette.setEnabled(false);
+			actionClearPalette.setEnabled(paletteReady);
+		}
+		actionUndo.setEnabled(canUndoSomethingSelected());
+		actionSaveSelected.setEnabled(canUndoSomethingSelected());
+	}
+	
 	@Override
 	public void saveProject() {
 		super.saveProject();
@@ -192,31 +238,18 @@ public class ImageProjectPanel extends ProjectPanel {
             if (retValue == JFileChooser.APPROVE_OPTION) {
 				Timer timer = new Timer(fc.getSelectedFiles().length, "Add Image");
                 File[] inputImages = fc.getSelectedFiles();
-                if (MainFrame.isParallel) {
-//                	TaskIDGroup grp = new TaskIDGroup(inputImages.length);
-//                	for (int i = 0; i < inputImages.length; i++) {
-//                    	TaskID<Image> idImage = ImageManipulation.getImageFullTask(inputImages[i]);
-//                    	TaskID<Image> idMedium = ImageManipulation.getMediumTask(idImage) dependsOn(idImage);
-//                    	TaskID<Image> idSmall = ImageManipulation.getSmallSquareTask(idImage) dependsOn(idImage);
-//                    	TaskID id = addToThumbnailsPanelTask(inputImages[i], idImage, idSmall, idMedium)
-//                    			notify(timer::taskComplete());
-//                    			dependsOn(idSmall, idMedium);
-//                    	grp.add(id);
-//                	}
-//                	TaskID finalTask = finishedAddingNewPanelItemsTask();
-//                	dependsOn(grp);
-                } else {
-        			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                	for (int i = 0; i < inputImages.length; i++) {
-                    	Image large = ImageManipulation.getImageFull(inputImages[i]);
-                    	Image small = ImageManipulation.getSmallSquare(large);
-                    	Image medium = ImageManipulation.getMedium(large);
-                    	addToThumbnailsPanel(inputImages[i], large, small, medium);
-                    	timer.taskComplete();
-                	}
-                    finishedAddingNewPanelItems();
-            		setCursor(Cursor.getDefaultCursor());
+                //TODO
+        		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                for (int i = 0; i < inputImages.length; i++) {
+                   	Image large = ImageManipulation.getImageFull(inputImages[i]);
+                   	Image small = ImageManipulation.getSmallSquare(large);
+                   	Image medium = ImageManipulation.getMedium(large);
+                   	addToThumbnailsPanel(inputImages[i], large, small, medium);
+                   	timer.taskComplete();
                 }
+                finishedAddingNewPanelItems();
+            	setCursor(Cursor.getDefaultCursor());
+                
             }
         }
     };
@@ -284,29 +317,17 @@ public class ImageProjectPanel extends ProjectPanel {
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
 
-				if (mainFrame.isParallel) {
-//					// TaskIDGroup = .. 
-//					TaskID<ImageCombo> id = ImageManipulation.invertTask(panel) 
-//							notify(panel::setImageTask(TaskID), ImageProjectPanel.this::guiChanged(), timer::taskComplete()) 
-//							dependsOn(panel.getHistory());
-//					panel.addToHistory(id);
-//					
-//					// grp.add(id) ...
-				} else {
-				
-        			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-				
-					ImageCombo res = ImageManipulation.invert(panel);
-					panel.setImage(res);
-					guiChanged();
-            		setCursor(Cursor.getDefaultCursor());
-            		timer.taskComplete();
-				}
+       			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+       			//TODO
+				ImageCombo res = ImageManipulation.invert(panel);
+				panel.setImage(res);
+				guiChanged();
+           		setCursor(Cursor.getDefaultCursor());
+           		timer.taskComplete();
+
 			}
 		}
 	};
-	
-
 	
 	private Action actionBlur = new AbstractAction() {
 		private static final long serialVersionUID = 1L;
@@ -314,28 +335,18 @@ public class ImageProjectPanel extends ProjectPanel {
 		public void actionPerformed(ActionEvent arg0) {
 			Timer timer = new Timer(getSelectedPanels().size(), "Blur");
 			Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
-			//if (it.hasNext())
-				//isModified = true;
-			
+				
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
 
-				if (mainFrame.isParallel) {
-//					// TaskIDGroup = .. 
-//					TaskID<ImageCombo> id = ImageManipulation.blurTask(panel) 
-//							notify(panel::setImageTask(TaskID), ImageProjectPanel.this::guiChanged(), timer::taskComplete()) 
-//							dependsOn(panel.getHistory());
-//					panel.addToHistory(id);
-//					
-//					// grp.add(id) ...
-				} else {
-        			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					ImageCombo res = ImageManipulation.blur(panel);
-					panel.setImage(res);
-					guiChanged();
-            		setCursor(Cursor.getDefaultCursor());
-            		timer.taskComplete();
-				}
+				//TODO
+        		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				ImageCombo res = ImageManipulation.blur(panel);
+				panel.setImage(res);
+				guiChanged();
+            	setCursor(Cursor.getDefaultCursor());
+            	timer.taskComplete();
+				
 			}
 		}
 	};
@@ -347,39 +358,26 @@ public class ImageProjectPanel extends ProjectPanel {
 		public void actionPerformed(ActionEvent arg0) {
 			Timer timer = new Timer(getSelectedPanels().size(), "Sharpen");
 			Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
-			//if (it.hasNext())
-				//isModified = true;
 			
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
-
-				if (mainFrame.isParallel) {
-//					// TaskIDGroup = .. 
-//					TaskID<ImageCombo> id = ImageManipulation.sharpenTask(panel) 
-//							notify(panel::setImageTask(TaskID), ImageProjectPanel.this::guiChanged(), timer::taskComplete()) 
-//							dependsOn(panel.getHistory());
-//					panel.addToHistory(id);
-//					// grp.add(id) ...
-				} else {
-        			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					ImageCombo res = ImageManipulation.sharpen(panel);
-					panel.setImage(res);
-					guiChanged();
-            		setCursor(Cursor.getDefaultCursor());
-            		timer.taskComplete();
-				}
+				
+				//TODO
+        		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				ImageCombo res = ImageManipulation.sharpen(panel);
+				panel.setImage(res);
+				guiChanged();
+            	setCursor(Cursor.getDefaultCursor());
+            	timer.taskComplete();
 			}
 		}
 	};
-	
-
-	
+		
 	private Action actionSaveSelected = new AbstractAction() {
 		private static final long serialVersionUID = 1L;
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Timer timer = new Timer("Apply Changes");
-//			mainFrame.saveCurrentProject();
 			savePanels(getSelectedPanels());
 			timer.taskComplete();
 		}
@@ -397,21 +395,13 @@ public class ImageProjectPanel extends ProjectPanel {
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
 
-				if (mainFrame.isParallel) {
-//					// TaskIDGroup = .. 
-//					TaskID<ImageCombo> id = ImageManipulation.edgeDetectTask(panel) 
-//							notify(panel::setImageTask(TaskID), ImageProjectPanel.this::guiChanged(), timer::taskComplete()) 
-//							dependsOn(panel.getHistory());
-//					panel.addToHistory(id);
-//					// grp.add(id) ...
-				} else {
-        			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					ImageCombo res = ImageManipulation.edgeDetect(panel);
-					panel.setImage(res);
-					guiChanged();
-            		setCursor(Cursor.getDefaultCursor());
-            		timer.taskComplete();
-				}
+				//TODO
+        		setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				ImageCombo res = ImageManipulation.edgeDetect(panel);
+				panel.setImage(res);
+				guiChanged();
+            	setCursor(Cursor.getDefaultCursor());
+            	timer.taskComplete();
 			}
 		}
 	};
@@ -435,63 +425,7 @@ public class ImageProjectPanel extends ProjectPanel {
             timer.taskComplete();
 		}
 	};
-	
-
-	
-	public void updateActions() {
 		
-		boolean empty = true;
-		boolean somethingSelected = false;
-		boolean allSelected = false;
-		boolean paletteReady = false;
-		
-		if (thumbnailsPanel != null) {
-			Component[] comps = thumbnailsPanel.getComponents();
-			if (comps.length != 0) {
-				empty = false;
-				somethingSelected = getSelectedPanels().size() > 0;
-				allSelected = getSelectedPanels().size() == comps.length;
-				paletteReady = palette.size() > 0;
-			} 
-		}
-		
-		if (!empty) {
-			actionSelectAll.setEnabled(!allSelected);
-			actionRemoveImage.setEnabled(somethingSelected);
-			actionSelectNone.setEnabled(somethingSelected);
-			actionInvert.setEnabled(somethingSelected);
-			actionApplyEdge.setEnabled(somethingSelected);
-			actionBlur.setEnabled(somethingSelected);
-			actionSharpen.setEnabled(somethingSelected);
-			actionBuildMosaic.setEnabled(somethingSelected);
-			actionBuildImageMosaic.setEnabled(somethingSelected && paletteReady);
-			actionBuildPalette.setEnabled(somethingSelected && !paletteReady);
-			actionClearPalette.setEnabled(paletteReady);
-		} else {
-			actionSelectAll.setEnabled(false);
-			actionSelectNone.setEnabled(false);
-			actionRemoveImage.setEnabled(false);
-			actionInvert.setEnabled(false);
-			actionApplyEdge.setEnabled(false);
-			actionBlur.setEnabled(false);
-			actionSharpen.setEnabled(false);
-			actionBuildMosaic.setEnabled(false);
-			actionBuildImageMosaic.setEnabled(false);
-			actionBuildPalette.setEnabled(false);
-			actionClearPalette.setEnabled(paletteReady);
-		}
-		actionUndo.setEnabled(canUndoSomethingSelected());
-		actionSaveSelected.setEnabled(canUndoSomethingSelected());
-	}
-	
-
-	
-
-	
-
-	
-
-	
 	private Action actionBuildMosaic = new AbstractAction() {
 		private static final long serialVersionUID = 1L;
 		@Override
@@ -501,19 +435,14 @@ public class ImageProjectPanel extends ProjectPanel {
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
 
-				if (mainFrame.isParallel) {
-//					TaskID<ImageCombo> id = MosaicBuilder.buildMosaicTask(panel, density, size) 
-//							notify(panel::setImageTask(TaskID), ImageProjectPanel.this::guiChanged(), timer::taskComplete()) 
-//							dependsOn(panel.getHistory());
-//					panel.addToHistory(id);
-				} else {
-					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					ImageCombo res = MosaicBuilder.buildMosaic(panel, density, size);
-					panel.setImage(res);
-					guiChanged();
-					setCursor(Cursor.getDefaultCursor());
-					timer.taskComplete();
-				}
+				//TODO
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				ImageCombo res = MosaicBuilder.buildMosaic(panel, density, size);
+				panel.setImage(res);
+				guiChanged();
+				setCursor(Cursor.getDefaultCursor());
+				timer.taskComplete();
+				
 			}
 		}
 	};
@@ -528,7 +457,6 @@ public class ImageProjectPanel extends ProjectPanel {
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
 
-				if (mainFrame.isParallel) {
 //					if (parallelism == 1) {
 //						setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 //						ImageCombo res = MosaicBuilder.buildImageMosaic2(panel, palette, density);
@@ -557,14 +485,14 @@ public class ImageProjectPanel extends ProjectPanel {
 //							dependsOn(panel.getHistory());
 //						panel.addToHistory(id);
 //					}
-				} else {
-					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					ImageCombo res = MosaicBuilder.buildImageMosaic(panel, palette, density);
-					panel.setImage(res);
-					guiChanged();
-					setCursor(Cursor.getDefaultCursor());
-					timer.taskComplete();
-				}
+				//TODO
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				ImageCombo res = MosaicBuilder.buildImageMosaic(panel, palette, density);
+				panel.setImage(res);
+				guiChanged();
+				setCursor(Cursor.getDefaultCursor());
+				timer.taskComplete();
+				
 			}
 		}
 	};
@@ -578,24 +506,13 @@ public class ImageProjectPanel extends ProjectPanel {
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
 
-				if (mainFrame.isParallel) {
-//					TaskID<List<PaletteItem>> id = MosaicBuilder.buildMosaicPaletteItemTask(panel, palette, size)
-//						notify(ImageProjectPanel.this::guiChanged(), timer::taskComplete());
-//                    try {
-//						palette = id.getReturnResult();
-//					} catch (ExecutionException e) {
-//			            e.printStackTrace();
-//			        } catch (InterruptedException e) {
-//			            e.printStackTrace();
-//			        }
-
-				} else {
-					setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-					palette = MosaicBuilder.buildMosaicPaletteItem(panel, palette, size);
-					guiChanged();
-					setCursor(Cursor.getDefaultCursor());
-					timer.taskComplete();
-				}
+				//TODO
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				palette = MosaicBuilder.buildMosaicPaletteItem(panel, palette, size);
+				guiChanged();
+				setCursor(Cursor.getDefaultCursor());
+				timer.taskComplete();
+				
 			}
 		}
 	};

@@ -167,8 +167,7 @@ public class ImagePanelItem extends JPanel implements ChangeListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFrame frame = new JFrame(file.getName());
-				frame
-						.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+				frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 				ZoomCanvas canvas = new ZoomCanvas(imageLarge);
 				frame.add(canvas, BorderLayout.CENTER);
 				frame.pack();
