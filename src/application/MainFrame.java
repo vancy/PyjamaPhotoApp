@@ -19,16 +19,19 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 
+import pj.Pyjama;
+
 public class MainFrame extends JFrame {
 
+	private static final long serialVersionUID = 1391078337106684377L;
+	
 	public static final String applicationName = "ParaImage";
 	public static final String applicationVersion = "0.95";
 	public static final String appIcon = "images/logo.png";
 	public static final String appLogo = "images/logo_name.png";
 
-	public static int timeWasterSize = 150;// 120;
+	public static final int timeWasterSize = 150;// 120;
 
-	private static final long serialVersionUID = 1391078337106684377L;
 	public static int width = 1300;
 	public static int height = 980;
 
@@ -41,6 +44,8 @@ public class MainFrame extends JFrame {
 	public static boolean isParallel = false;
 
 	public MainFrame() {
+		System.err.println("GUI init from thread " + Thread.currentThread());
+		Pyjama.omp_register_as_virtual_target("edt");
 		setTitle(applicationName + " v. " + applicationVersion);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -381,6 +386,8 @@ public class MainFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		Pyjama.omp_set_platform(Pyjama.Platform.Swing);
+		Pyjama.omp_create_virtual_target("worker", 4);
 		MainFrame frame = new MainFrame();
 		frame.setVisible(true);
 	}
