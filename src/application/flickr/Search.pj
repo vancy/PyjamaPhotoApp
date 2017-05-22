@@ -100,11 +100,12 @@ public class Search {
 				Image image = Search.getSquareImage(p);
 				PhotoWithImage pi = new PhotoWithImage(p, image);
 				list.add(pi);
-				//#omp target virtual(edt) shared(panel,pl,i) nowait
+				//#omp target virtual(edt) shared(panel,pl,i,pi) nowait
 				{
 					panel.progressBar.setValue((int) ((i + 1.0) / pl.size() * 100));
+					panel.addToDisplay(pi);
 					panel.updateUI();
-					System.err.println("update progress bar "+ i + "/" + pl.size() + "from thread " + Thread.currentThread());
+					System.err.println("update progress bar "+ (i+1) + "/" + pl.size() + "from thread " + Thread.currentThread());
 				}
 				//#omp cancellation point task
 			}

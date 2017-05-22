@@ -127,14 +127,16 @@ public class Search {
                 list.add(pi);
                 /*OpenMP Target region (#0) -- START */
                 _OMP_TargetTaskRegion_0 _OMP_TargetTaskRegion_0_in = new _OMP_TargetTaskRegion_0();
-                _OMP_TargetTaskRegion_0_in.pl = pl;
-                _OMP_TargetTaskRegion_0_in.panel = panel;
+                _OMP_TargetTaskRegion_0_in.pi = pi;
                 _OMP_TargetTaskRegion_0_in.i = i;
+                _OMP_TargetTaskRegion_0_in.panel = panel;
+                _OMP_TargetTaskRegion_0_in.pl = pl;
                 if (PjRuntime.currentThreadIsTheTarget("edt")) {
                     _OMP_TargetTaskRegion_0_in.run();
-                    pl = _OMP_TargetTaskRegion_0_in.pl;
-                    panel = _OMP_TargetTaskRegion_0_in.panel;
+                    pi = _OMP_TargetTaskRegion_0_in.pi;
                     i = _OMP_TargetTaskRegion_0_in.i;
+                    panel = _OMP_TargetTaskRegion_0_in.panel;
+                    pl = _OMP_TargetTaskRegion_0_in.pl;
                 } else {
                     PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_0_in);
                 }
@@ -155,19 +157,25 @@ static class _OMP_TargetTaskRegion_0 extends pj.pr.task.TargetTask<Void>{
     //#BEGIN shared, private variables defined here
     public SearchProjectPanel panel;
     public PhotoList<?> pl;
+    public PhotoWithImage pi;
     public int i;
     //#END shared, private variables defined here
 
     private int OMP_state = 0;
     @Override
     public Void call() {
-        /****User Code BEGIN***/
-        {
-            panel.progressBar.setValue((int) ((i + 1.0) / pl.size() * 100));
-            panel.updateUI();
-            System.err.println("update progress bar " + i + "/" + pl.size() + "from thread " + Thread.currentThread());
+        try {
+            /****User Code BEGIN***/
+            {
+                panel.progressBar.setValue((int) ((i + 1.0) / pl.size() * 100));
+                panel.addToDisplay(pi);
+                panel.updateUI();
+                System.err.println("update progress bar " + i + "/" + pl.size() + "from thread " + Thread.currentThread());
+            }
+            /****User Code END***/
+        } catch(pj.pr.exceptions.OmpCancelCurrentTaskException e) {
+            ;
         }
-        /****User Code END***/
         this.setFinish();
         return null;
     }

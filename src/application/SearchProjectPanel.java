@@ -246,7 +246,7 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
     }
 
 
-    private void addToDisplay(PhotoWithImage pi) {{
+    public void addToDisplay(PhotoWithImage pi) {{
         thumbnailsPanel.add(new PhotoPanelItem(pi.getPhoto(), pi.getImage(), projectDir, this));
     }
     }
@@ -273,20 +273,20 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
         SearchProjectPanel tthis = this;
         /*OpenMP Target region (#1) -- START */
         _OMP_TargetTaskRegion_1 _OMP_TargetTaskRegion_1_in = new _OMP_TargetTaskRegion_1();
-        _OMP_TargetTaskRegion_1_in.currentOffset = currentOffset;
         _OMP_TargetTaskRegion_1_in.search = search;
-        _OMP_TargetTaskRegion_1_in.results = results;
-        _OMP_TargetTaskRegion_1_in.tthis = tthis;
-        _OMP_TargetTaskRegion_1_in.timer = timer;
         _OMP_TargetTaskRegion_1_in.resPP = resPP;
+        _OMP_TargetTaskRegion_1_in.tthis = tthis;
+        _OMP_TargetTaskRegion_1_in.results = results;
+        _OMP_TargetTaskRegion_1_in.timer = timer;
+        _OMP_TargetTaskRegion_1_in.currentOffset = currentOffset;
         if (PjRuntime.currentThreadIsTheTarget("worker")) {
             _OMP_TargetTaskRegion_1_in.run();
-            currentOffset = _OMP_TargetTaskRegion_1_in.currentOffset;
             search = _OMP_TargetTaskRegion_1_in.search;
-            results = _OMP_TargetTaskRegion_1_in.results;
-            tthis = _OMP_TargetTaskRegion_1_in.tthis;
-            timer = _OMP_TargetTaskRegion_1_in.timer;
             resPP = _OMP_TargetTaskRegion_1_in.resPP;
+            tthis = _OMP_TargetTaskRegion_1_in.tthis;
+            results = _OMP_TargetTaskRegion_1_in.results;
+            timer = _OMP_TargetTaskRegion_1_in.timer;
+            currentOffset = _OMP_TargetTaskRegion_1_in.currentOffset;
         } else {
             PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_1_in);
         }
@@ -295,6 +295,32 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
 
     }
     }
+class _OMP_TargetTaskRegion_2 extends pj.pr.task.TargetTask<Void>{
+
+    //#BEGIN shared, private variables defined here
+    public List<PhotoWithImage> results;
+    //#END shared, private variables defined here
+
+    private int OMP_state = 0;
+    @Override
+    public Void call() {
+        try {
+            /****User Code BEGIN***/
+            {
+                finishedSearch();
+            }
+            /****User Code END***/
+        } catch(pj.pr.exceptions.OmpCancelCurrentTaskException e) {
+            ;
+        }
+        this.setFinish();
+        return null;
+    }
+    
+}
+
+
+
 class _OMP_TargetTaskRegion_1 extends pj.pr.task.TargetTask<Void>{
 
     //#BEGIN shared, private variables defined here
@@ -309,69 +335,27 @@ class _OMP_TargetTaskRegion_1 extends pj.pr.task.TargetTask<Void>{
     private int OMP_state = 0;
     @Override
     public Void call() {
-        /****User Code BEGIN***/
-        switch(OMP_state) {
-        case 0:
-                        results = Search.search(search, resPP, currentOffset, tthis);
-                        /*OpenMP Target region (#2) -- START */
-            _OMP_TargetTaskRegion_2_in = new _OMP_TargetTaskRegion_2();
-            _OMP_TargetTaskRegion_2_in.results = results;
-            if (PjRuntime.currentThreadIsTheTarget("edt")) {
-                _OMP_TargetTaskRegion_2_in.run();
-                results = _OMP_TargetTaskRegion_2_in.results;
-            } else {
-                _OMP_TargetTaskRegion_2_in.setOnCompleteCall(this, PjRuntime.getVirtualTargetOfCurrentThread());
-                PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_2_in);
-                if (false == PjRuntime.checkFinish(_OMP_TargetTaskRegion_2_in))  {
-                    this.OMP_state++;
-                    return null;
+        try {
+            /****User Code BEGIN***/
+            {
+                results = Search.search(search, resPP, currentOffset, tthis);
+                /*OpenMP Target region (#2) -- START */
+                _OMP_TargetTaskRegion_2 _OMP_TargetTaskRegion_2_in = new _OMP_TargetTaskRegion_2();
+                _OMP_TargetTaskRegion_2_in.results = results;
+                if (PjRuntime.currentThreadIsTheTarget("edt")) {
+                    _OMP_TargetTaskRegion_2_in.run();
+                    results = _OMP_TargetTaskRegion_2_in.results;
+                } else {
+                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_2_in);
                 }
-            }
-            this.OMP_state++;
-            /*OpenMP Target region (#2) -- END */
+                /*OpenMP Target region (#2) -- END */
 
-        case 1:
-            Throwable OMP_asyncThrow__OMP_TargetTaskRegion_2 = _OMP_TargetTaskRegion_2_in.getException();
-            if (null != OMP_asyncThrow__OMP_TargetTaskRegion_2) {
-                if (OMP_asyncThrow__OMP_TargetTaskRegion_2 instanceof Error) {
-                    throw (Error)OMP_asyncThrow__OMP_TargetTaskRegion_2;
-                } else if (OMP_asyncThrow__OMP_TargetTaskRegion_2 instanceof RuntimeException) {
-                    throw (RuntimeException)OMP_asyncThrow__OMP_TargetTaskRegion_2;
-                }
+                timer.taskComplete();
             }
-            results = _OMP_TargetTaskRegion_2_in.results;
-                        timer.taskComplete();
-            default:
-                this.setFinish();
+            /****User Code END***/
+        } catch(pj.pr.exceptions.OmpCancelCurrentTaskException e) {
+            finishedSearch(1);
         }
-
-        /****User Code END***/
-        this.setFinish();
-        return null;
-    }
-    private _OMP_TargetTaskRegion_2 _OMP_TargetTaskRegion_2_in;
-
-}
-
-class _OMP_TargetTaskRegion_2 extends pj.pr.task.TargetTask<Void>{
-
-    //#BEGIN shared, private variables defined here
-    public List<PhotoWithImage> results;
-    //#END shared, private variables defined here
-
-    private int OMP_state = 0;
-    @Override
-    public Void call() {
-        /****User Code BEGIN***/
-        {
-            for (PhotoWithImage pi : results) {
-                addToDisplay(pi);
-            }
-            progressBar.setValue(100);
-            finishedSearch();
-            setCursor(Cursor.getDefaultCursor());
-        }
-        /****User Code END***/
         this.setFinish();
         return null;
     }
@@ -382,7 +366,17 @@ class _OMP_TargetTaskRegion_2 extends pj.pr.task.TargetTask<Void>{
 
 
 
-
+    private void finishedSearch(int a) {{
+        txtCurrentPage.setText("page " + (currentOffset));
+        thumbnailsPanel.updateUI();
+        isModified = true;
+        mainFrame.updateTabIcons();
+        enableButtons();
+        progressBar.setValue(0);
+        setCursor(Cursor.getDefaultCursor());
+        updateUI();
+    }
+    }
 
 
     private void stopSearch() {{

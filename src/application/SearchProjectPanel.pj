@@ -217,7 +217,7 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
 	}
 	
 	
-    private void addToDisplay(PhotoWithImage pi) {
+    public void addToDisplay(PhotoWithImage pi) {
     	thumbnailsPanel.add(new PhotoPanelItem(pi.getPhoto(), pi.getImage(), projectDir, this));
     }
     	
@@ -253,24 +253,28 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
         
         List<PhotoWithImage> results = null;
         SearchProjectPanel tthis = this;
-        //#omp target virtual(worker) shared(results, search, resPP, currentOffset, tthis, timer) name_as(search)
+        //#omp target virtual(worker) shared(results, search, resPP, currentOffset, tthis, timer) name_as(search) on_cancel(finishedSearch(1))
         {
-        	
         	results = Search.search(search, resPP, currentOffset, tthis);
-        	//#omp target virtual(edt) shared(results) await
+        	//#omp target virtual(edt) shared(results) nowait
         	{
-        		for (PhotoWithImage pi : results) {
-        			addToDisplay(pi);
-        		}	
-        		progressBar.setValue(100);
         		finishedSearch();
-        		setCursor(Cursor.getDefaultCursor());
         	}
         	timer.taskComplete();
         }
-
 	
     }
+
+	private void finishedSearch(int a) {
+        txtCurrentPage.setText("page " + (currentOffset));
+        thumbnailsPanel.updateUI();
+        isModified = true;
+        mainFrame.updateTabIcons();
+        enableButtons();
+        progressBar.setValue(0);
+        setCursor(Cursor.getDefaultCursor());
+        updateUI();
+	}
 	
 	private void stopSearch() {
 		Timer timer = new Timer("Stop-Search");
