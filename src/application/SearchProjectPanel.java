@@ -64,17 +64,17 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
 
     private JTextField txtSearch = new JTextField("", 18);
 
-    private JButton btnSearch = new JButton(new ImageIcon("images/search.png"));
+    private JButton btnSearch = new JButton(new ImageIcon(getClass().getResource("/res/search.png")));
 
-    private JButton btnStop = new JButton(new ImageIcon("images/stop.png"));
+    private JButton btnStop = new JButton(new ImageIcon(getClass().getResource("/res/stop.png")));
 
     private JSpinner spnResultsPerPage = null;
 
     private JLabel lblResPP = new JLabel("#pics");
 
-    private JButton btnNext = new JButton(new ImageIcon("images/right.png"));
+    private JButton btnNext = new JButton(new ImageIcon(getClass().getResource("/res/right.png")));
 
-    private JButton btnPrev = new JButton(new ImageIcon("images/left.png"));
+    private JButton btnPrev = new JButton(new ImageIcon(getClass().getResource("/res/left.png")));
 
     private JTextField txtCurrentPage = new JTextField("-", 7);
 

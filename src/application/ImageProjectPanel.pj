@@ -64,19 +64,19 @@ public class ImageProjectPanel extends ProjectPanel {
 	private void addToolButtonsPanel() {
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
-		panel.add(makeButton("images/add.png", actionAddImage, "Add more image(s) to the project"));
-		panel.add(makeButton("images/saveimage.png", actionSaveSelected, "Apply changes to the selected image(s)"));
-		panel.add(makeButton("images/undo.png", actionUndo, "Undo changes to the selected image(s)"));
-		panel.add(makeButton("images/remove.png", actionRemoveImage, "Remove selected image(s) from view"));
-		panel.add(makeButton("images/gradient.png", actionApplyEdge, "Edge detect on the selected image(s)"));
-		panel.add(makeButton("images/video.png", actionInvert, "Invert colors on the selected image(s)"));
-		panel.add(makeButton("images/blur.png", actionBlur, "Blur the selected image(s)"));
-		panel.add(makeButton("images/sharpen.png", actionSharpen, "Sharpen the selected image(s)"));
-		panel.add(makeButton("images/canvas.png", actionBuildMosaic, "Build a mosaic of the selected image(s)"));
-		panel.add(makeButton("images/artwork.png", actionBuildImageMosaic, "Build an image mosaic of the selected image(s)"));
-		panel.add(makeButton("images/palette.png", actionBuildPalette, "Build the palette to be used to make image mosaics"));
-		panel.add(makeButton("images/clearPalette.png", actionClearPalette, "Clear the palette of images"));
-		panel.add(makeButton("images/settings.png", actionMosaicSettings, "Modify attributes related to building mosaics"));
+		panel.add(makeButton("/res/add.png", actionAddImage, "Add more image(s) to the project"));
+		panel.add(makeButton("/res/saveimage.png", actionSaveSelected, "Apply changes to the selected image(s)"));
+		panel.add(makeButton("/res/undo.png", actionUndo, "Undo changes to the selected image(s)"));
+		panel.add(makeButton("/res/remove.png", actionRemoveImage, "Remove selected image(s) from view"));
+		panel.add(makeButton("/res/gradient.png", actionApplyEdge, "Edge detect on the selected image(s)"));
+		panel.add(makeButton("/res/video.png", actionInvert, "Invert colors on the selected image(s)"));
+		panel.add(makeButton("/res/blur.png", actionBlur, "Blur the selected image(s)"));
+		panel.add(makeButton("/res/sharpen.png", actionSharpen, "Sharpen the selected image(s)"));
+		panel.add(makeButton("/res/canvas.png", actionBuildMosaic, "Build a mosaic of the selected image(s)"));
+		panel.add(makeButton("/res/artwork.png", actionBuildImageMosaic, "Build an image mosaic of the selected image(s)"));
+		panel.add(makeButton("/res/palette.png", actionBuildPalette, "Build the palette to be used to make image mosaics"));
+		panel.add(makeButton("/res/clearPalette.png", actionClearPalette, "Clear the palette of images"));
+		panel.add(makeButton("/res/settings.png", actionMosaicSettings, "Modify attributes related to building mosaics"));
 		
 		JPanel grp = new JPanel(new GridLayout(3,1));
 		grp.add(new JLabel("Select..",JLabel.CENTER));
@@ -167,7 +167,7 @@ public class ImageProjectPanel extends ProjectPanel {
 	private JButton makeButton(String icon, Action action, String tooltip) {
 		JButton btn = new JButton(action);
 		btn.setToolTipText(tooltip);
-		btn.setIcon(new ImageIcon(icon));
+		btn.setIcon(new ImageIcon(getClass().getResource(icon)));
 		btn.setPreferredSize(new Dimension(buttonSize,buttonSize));
 		return btn;
 	}

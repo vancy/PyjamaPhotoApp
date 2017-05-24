@@ -41,12 +41,12 @@ public class PhotoPanelItem extends JPanel implements ActionListener {
 	
 	private String defaultName = "unnamed";
 
-	private JButton btnDownload = new JButton(new ImageIcon("images/download.png"));
-	private JButton btnView = new JButton(new ImageIcon("images/openfull.png"));
-	private JButton btnSave = new JButton(new ImageIcon("images/save2.png"));
-	private JButton btnHash = new JButton(new ImageIcon("images/hashComp.png"));
-	private JButton btnColor = new JButton(new ImageIcon("images/colorComp.png"));
-	private JButton btnSettings = new JButton(new ImageIcon("images/settingsSmall.png"));
+	private JButton btnDownload = new JButton(new ImageIcon(getClass().getResource("/res/download.png")));
+	private JButton btnView = new JButton(new ImageIcon(getClass().getResource("/res/openfull.png")));
+	private JButton btnSave = new JButton(new ImageIcon(getClass().getResource("/res/save2.png")));
+	private JButton btnHash = new JButton(new ImageIcon(getClass().getResource("/res/hashComp.png")));
+	private JButton btnColor = new JButton(new ImageIcon(getClass().getResource("/res/colorComp.png")));
+	private JButton btnSettings = new JButton(new ImageIcon(getClass().getResource("/res/settingsSmall.png")));
 	
 	private static int height = 100;
 	
@@ -55,7 +55,7 @@ public class PhotoPanelItem extends JPanel implements ActionListener {
 		this.imageSquare = imageSquare;
 		this.preferredDir = preferredDir;
 		this.parent = parent;
-		
+				
 		setLayout(null);
 		
 		JLabel lblImage = new JLabel(new ImageIcon(imageSquare));

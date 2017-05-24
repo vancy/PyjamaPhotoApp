@@ -14,6 +14,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -27,8 +30,8 @@ public class MainFrame extends JFrame {
 	
 	public static final String applicationName = "ParaImage";
 	public static final String applicationVersion = "0.95";
-	public static final String appIcon = "images/logo.png";
-	public static final String appLogo = "images/logo_name.png";
+	public static final String appIcon = "/res/logo.png";
+	public static final String appLogo = "/res/logo_name.png";
 
 	public static final int timeWasterSize = 150;// 120;
 
@@ -55,13 +58,17 @@ public class MainFrame extends JFrame {
 		});
 		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		setSize(width, height);
+		
 
+		URL location = null;
 		try {
-			frameIcon = ImageIO.read(new File(appIcon));
-		} catch (IOException e1) {
-			e1.printStackTrace();
+			//location = new URL(appIcon);
+			location = new URL("https://i1.hoopchina.com.cn/user/493/31160493/31160493-1495519387.jpeg@194h_194w_2e");
+			frameIcon = ImageIO.read(location);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
+	
 		setIconImage(frameIcon);
 
 		Border padding = BorderFactory.createEmptyBorder(5, 5, 5, 5);
@@ -86,8 +93,8 @@ public class MainFrame extends JFrame {
 				updateTabIcons();
 			}
 		});
-
-		iconSave = new ImageIcon("images/save_16.png");
+		
+		iconSave = new ImageIcon(getClass().getResource("/res/save.png"));
 		addMenus();
 		getContentPane().add(pane, BorderLayout.CENTER);
 		setResizable(false);
@@ -110,7 +117,7 @@ public class MainFrame extends JFrame {
 			JLabel label = new JLabel(message);
 			JOptionPane.showMessageDialog(MainFrame.this, label, "About "
 					+ applicationName, JOptionPane.PLAIN_MESSAGE,
-					new ImageIcon(appLogo));
+					new ImageIcon(getClass().getResource(appLogo)));
 		}
 	};
 
@@ -197,8 +204,6 @@ public class MainFrame extends JFrame {
 		Component comp = pane.getSelectedComponent();
 		if (comp instanceof ProjectPanel) {
 			ProjectPanel project = (ProjectPanel) comp;
-			// actionSaveCurrentProject.setEnabled(!project.isSaved() ||
-			// project.isModified());
 
 			if (project.isModified() || !project.isSaved()) {
 				actionSaveCurrentProject.setEnabled(true);
@@ -333,7 +338,7 @@ public class MainFrame extends JFrame {
 		JLabel label = new JLabel(message);
 		label.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		JOptionPane.showMessageDialog(MainFrame.this, label, "Future release",
-				JOptionPane.PLAIN_MESSAGE, new ImageIcon("images/tools.png"));
+				JOptionPane.PLAIN_MESSAGE, new ImageIcon(getClass().getResource("/res/tools.png")));
 	}
 
 	private void addMenus() {

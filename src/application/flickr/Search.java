@@ -170,7 +170,7 @@ static class _OMP_TargetTaskRegion_0 extends pj.pr.task.TargetTask<Void>{
                 panel.progressBar.setValue((int) ((i + 1.0) / pl.size() * 100));
                 panel.addToDisplay(pi);
                 panel.updateUI();
-                System.err.println("update progress bar " + i + "/" + pl.size() + "from thread " + Thread.currentThread());
+                System.err.println("update progress bar " + (i + 1) + "/" + pl.size() + "from thread " + Thread.currentThread());
             }
             /****User Code END***/
         } catch(pj.pr.exceptions.OmpCancelCurrentTaskException e) {
