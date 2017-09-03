@@ -8,26 +8,23 @@
 	Properties that don't usually change from here below.
  		 ================================= -->
 
-	<property name="src.dir" location="src"/>
+	<property name="src.dir" location="src/"/>
+	<property name="res.dir" location="res/"/>
 
 	<property name="target.dir" location="bin"/>
 	<property name="target.classes.main.dir" location="${target.dir}/classes/main"/>
-	<property name="target.classes.depe.dir" location="${target.dir}/classes/depe"/>
-	<property name="target.report.dir" location="${target.dir}/report"/>
-	<property name="target.docs.dir" location="${target.dir}/docs"/>
 	<property name="target.release.dir" location="${target.dir}/release"/>
 
 	<property name="target.name" value="${ant.project.name}-${version}"/>
 
 	<property name="lib.main.dir" location="lib/" />
-	<property name="lib.dependency.dir" location="lib/" />
 
 	<!-- Dependencies that cannot be fetched from central repository -->
 	<path id="build.class.path">
 		<fileset dir="${lib.main.dir}">
 			<include name="*.jar" />
 		</fileset>
-		<fileset dir="${lib.dependency.dir}">
+		<fileset dir="${lib.main.dir}">
 					<include name="*.jar" />
 		</fileset>
 	</path>
@@ -57,47 +54,12 @@
 	<target name="build" depends="compile" description="Build .jar file without any dependencies.">
 		<jar destfile="${target.release.dir}/${target.name}.jar">
 			<fileset dir="${target.classes.main.dir}"/>
+			<fileset dir="."  includes="res/"/>
+				
 			<manifest>
 				<attribute name="Main-Class" value="application.MainFrame"/>
 			</manifest>
-			<zipgroupfileset dir="${lib.dependency.dir}" includes="**/*.jar" />
-		</jar>
-	</target>
-
-	<target name="doc" depends="compile" description="Generate Javadoc.">
-		<javadoc packagenames="*" sourcepath="${src.dir}" destdir="${target.docs.dir}">
-			<fileset dir="${src.dir}">
-				<include name="**/*.java" />
-			</fileset>
-		</javadoc>
-	</target>
-
-	<target name="package-doc" depends="doc" description="package Javadoc.">
-		<jar destfile="${target.release.dir}/${target.name}-javadoc.jar" basedir="${target.docs.dir}" />
-	</target>
-
-	<target name="package-src" description="package sources.">
-		<jar destfile="${target.release.dir}/${target.name}-sources.jar" basedir="${src.dir}" />
-	</target>
-
-	<target name="package-all" depends="compile, package-src, package-doc" description="Build .jar file with all dependencies. package sources and javadoc.">
-		<unzip dest="${target.classes.depe.dir}/classes">  
-			<fileset dir="${lib.main.dir}">
-				<include name="**/*.jar"/>
-				<exclude name="test/*.jar"/>
-			</fileset>
-			<patternset>  
-				<exclude name="META-INF"/>  
-				<exclude name="META-INF/MANIFEST.MF"/>  
-			</patternset>  
-		</unzip>  
-
-		<jar destfile="${target.release.dir}/${target.name}.jar">
-			<manifest>
-				<attribute name="Main-Class" value="Generate"/>
-			</manifest>
-			<fileset dir="${target.classes.main.dir}"/>
-			<fileset dir="${target.classes.depe.dir}/classes" includes="**/*.class"/>  
+			<zipgroupfileset dir="${lib.main.dir}" includes="**/*.jar" />
 		</jar>
 	</target>
 

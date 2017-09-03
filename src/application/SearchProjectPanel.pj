@@ -233,16 +233,7 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
     	else 
     		btnPrev.setEnabled(true);
     }
-    
-    // intermediate result
-//    private void receiveIntermediate( PhotoWithImage pi) {
-//    	addToDisplay(pi);
-//        progressBar.setValue(id.getProgress());
-//        updateUI();
-//        
-//        System.out.println("Intermediate result: "+pi.getPhoto().getTitle());
-//    }
-    
+      
     
 	private void search() {
 		Timer timer = new Timer("Search");
@@ -261,8 +252,8 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
         		finishedSearch();
         	}
         	timer.taskComplete();
+        	setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
-	
     }
 
 	private void finishedSearch(int a) {

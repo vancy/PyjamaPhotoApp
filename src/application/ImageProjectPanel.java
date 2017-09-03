@@ -263,12 +263,12 @@ public class ImageProjectPanel extends ProjectPanel {
                 setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 /*OpenMP Target region (#3) -- START */
                 _OMP_TargetTaskRegion_3 _OMP_TargetTaskRegion_3_in = new _OMP_TargetTaskRegion_3();
-                _OMP_TargetTaskRegion_3_in.inputImages = inputImages;
                 _OMP_TargetTaskRegion_3_in.timer = timer;
+                _OMP_TargetTaskRegion_3_in.inputImages = inputImages;
                 if (PjRuntime.currentThreadIsTheTarget("worker")) {
                     _OMP_TargetTaskRegion_3_in.run();
-                    inputImages = _OMP_TargetTaskRegion_3_in.inputImages;
                     timer = _OMP_TargetTaskRegion_3_in.timer;
+                    inputImages = _OMP_TargetTaskRegion_3_in.inputImages;
                 } else {
                     PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_3_in);
                 }
@@ -414,6 +414,7 @@ class _OMP_TargetTaskRegion_3 extends pj.pr.task.TargetTask<Void>{
         public void actionPerformed(ActionEvent arg0) {{
             Timer timer = new Timer(getSelectedPanels().size(), "Invert Colors");
             Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             while (it.hasNext()) {
                 ImagePanelItem panel = it.next();
                 /*OpenMP Target region (#5) -- START */
@@ -450,12 +451,12 @@ class _OMP_TargetTaskRegion_5 extends pj.pr.task.TargetTask<Void>{
                 res = ImageManipulation.invert(panel);
                                 /*OpenMP Target region (#6) -- START */
                 _OMP_TargetTaskRegion_6_in = new _OMP_TargetTaskRegion_6();
-                _OMP_TargetTaskRegion_6_in.res = res;
                 _OMP_TargetTaskRegion_6_in.panel = panel;
+                _OMP_TargetTaskRegion_6_in.res = res;
                 if (PjRuntime.currentThreadIsTheTarget("edt")) {
                     _OMP_TargetTaskRegion_6_in.run();
-                    res = _OMP_TargetTaskRegion_6_in.res;
                     panel = _OMP_TargetTaskRegion_6_in.panel;
+                    res = _OMP_TargetTaskRegion_6_in.res;
                 } else {
                     _OMP_TargetTaskRegion_6_in.setOnCompleteCall(this, PjRuntime.getVirtualTargetOfCurrentThread());
                     PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_6_in);
@@ -476,9 +477,10 @@ class _OMP_TargetTaskRegion_5 extends pj.pr.task.TargetTask<Void>{
                         throw (RuntimeException)OMP_asyncThrow__OMP_TargetTaskRegion_6;
                     }
                 }
-                res = _OMP_TargetTaskRegion_6_in.res;
                 panel = _OMP_TargetTaskRegion_6_in.panel;
+                res = _OMP_TargetTaskRegion_6_in.res;
                                 timer.taskComplete();
+                                setCursor(Cursor.getDefaultCursor());
                 default:
                     this.setFinish();
             }
@@ -538,18 +540,19 @@ class _OMP_TargetTaskRegion_6 extends pj.pr.task.TargetTask<Void>{
         public void actionPerformed(ActionEvent arg0) {{
             Timer timer = new Timer(getSelectedPanels().size(), "Blur");
             Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             while (it.hasNext()) {
                 ImagePanelItem panel = it.next();
                 /*OpenMP Target region (#7) -- START */
                 _OMP_TargetTaskRegion_7 _OMP_TargetTaskRegion_7_in = new _OMP_TargetTaskRegion_7();
                 _OMP_TargetTaskRegion_7_in.timer = timer;
                 _OMP_TargetTaskRegion_7_in.panel = panel;
-                if (PjRuntime.currentThreadIsTheTarget("edt")) {
+                if (PjRuntime.currentThreadIsTheTarget("worker")) {
                     _OMP_TargetTaskRegion_7_in.run();
                     timer = _OMP_TargetTaskRegion_7_in.timer;
                     panel = _OMP_TargetTaskRegion_7_in.panel;
                 } else {
-                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_7_in);
+                    PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_7_in);
                 }
                 /*OpenMP Target region (#7) -- END */
 
@@ -573,12 +576,12 @@ class _OMP_TargetTaskRegion_7 extends pj.pr.task.TargetTask<Void>{
                 res = ImageManipulation.blur(panel);
                                 /*OpenMP Target region (#8) -- START */
                 _OMP_TargetTaskRegion_8_in = new _OMP_TargetTaskRegion_8();
-                _OMP_TargetTaskRegion_8_in.res = res;
                 _OMP_TargetTaskRegion_8_in.panel = panel;
+                _OMP_TargetTaskRegion_8_in.res = res;
                 if (PjRuntime.currentThreadIsTheTarget("edt")) {
                     _OMP_TargetTaskRegion_8_in.run();
-                    res = _OMP_TargetTaskRegion_8_in.res;
                     panel = _OMP_TargetTaskRegion_8_in.panel;
+                    res = _OMP_TargetTaskRegion_8_in.res;
                 } else {
                     _OMP_TargetTaskRegion_8_in.setOnCompleteCall(this, PjRuntime.getVirtualTargetOfCurrentThread());
                     PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_8_in);
@@ -599,9 +602,10 @@ class _OMP_TargetTaskRegion_7 extends pj.pr.task.TargetTask<Void>{
                         throw (RuntimeException)OMP_asyncThrow__OMP_TargetTaskRegion_8;
                     }
                 }
-                res = _OMP_TargetTaskRegion_8_in.res;
                 panel = _OMP_TargetTaskRegion_8_in.panel;
+                res = _OMP_TargetTaskRegion_8_in.res;
                                 timer.taskComplete();
+                                setCursor(Cursor.getDefaultCursor());
                 default:
                     this.setFinish();
             }
@@ -660,18 +664,19 @@ class _OMP_TargetTaskRegion_8 extends pj.pr.task.TargetTask<Void>{
         public void actionPerformed(ActionEvent arg0) {{
             Timer timer = new Timer(getSelectedPanels().size(), "Sharpen");
             Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             while (it.hasNext()) {
                 ImagePanelItem panel = it.next();
                 /*OpenMP Target region (#9) -- START */
                 _OMP_TargetTaskRegion_9 _OMP_TargetTaskRegion_9_in = new _OMP_TargetTaskRegion_9();
-                _OMP_TargetTaskRegion_9_in.panel = panel;
                 _OMP_TargetTaskRegion_9_in.timer = timer;
-                if (PjRuntime.currentThreadIsTheTarget("edt")) {
+                _OMP_TargetTaskRegion_9_in.panel = panel;
+                if (PjRuntime.currentThreadIsTheTarget("worker")) {
                     _OMP_TargetTaskRegion_9_in.run();
-                    panel = _OMP_TargetTaskRegion_9_in.panel;
                     timer = _OMP_TargetTaskRegion_9_in.timer;
+                    panel = _OMP_TargetTaskRegion_9_in.panel;
                 } else {
-                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_9_in);
+                    PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_9_in);
                 }
                 /*OpenMP Target region (#9) -- END */
 
@@ -695,12 +700,12 @@ class _OMP_TargetTaskRegion_9 extends pj.pr.task.TargetTask<Void>{
                 res = ImageManipulation.sharpen(panel);
                                 /*OpenMP Target region (#10) -- START */
                 _OMP_TargetTaskRegion_10_in = new _OMP_TargetTaskRegion_10();
-                _OMP_TargetTaskRegion_10_in.panel = panel;
                 _OMP_TargetTaskRegion_10_in.res = res;
+                _OMP_TargetTaskRegion_10_in.panel = panel;
                 if (PjRuntime.currentThreadIsTheTarget("edt")) {
                     _OMP_TargetTaskRegion_10_in.run();
-                    panel = _OMP_TargetTaskRegion_10_in.panel;
                     res = _OMP_TargetTaskRegion_10_in.res;
+                    panel = _OMP_TargetTaskRegion_10_in.panel;
                 } else {
                     _OMP_TargetTaskRegion_10_in.setOnCompleteCall(this, PjRuntime.getVirtualTargetOfCurrentThread());
                     PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_10_in);
@@ -721,9 +726,10 @@ class _OMP_TargetTaskRegion_9 extends pj.pr.task.TargetTask<Void>{
                         throw (RuntimeException)OMP_asyncThrow__OMP_TargetTaskRegion_10;
                     }
                 }
-                panel = _OMP_TargetTaskRegion_10_in.panel;
                 res = _OMP_TargetTaskRegion_10_in.res;
+                panel = _OMP_TargetTaskRegion_10_in.panel;
                                 timer.taskComplete();
+                                setCursor(Cursor.getDefaultCursor());
                 default:
                     this.setFinish();
             }
@@ -796,18 +802,19 @@ class _OMP_TargetTaskRegion_10 extends pj.pr.task.TargetTask<Void>{
         public void actionPerformed(ActionEvent arg0) {{
             Timer timer = new Timer(getSelectedPanels().size(), "Edge Detect");
             Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             while (it.hasNext()) {
                 ImagePanelItem panel = it.next();
                 /*OpenMP Target region (#11) -- START */
                 _OMP_TargetTaskRegion_11 _OMP_TargetTaskRegion_11_in = new _OMP_TargetTaskRegion_11();
-                _OMP_TargetTaskRegion_11_in.timer = timer;
                 _OMP_TargetTaskRegion_11_in.panel = panel;
-                if (PjRuntime.currentThreadIsTheTarget("edt")) {
+                _OMP_TargetTaskRegion_11_in.timer = timer;
+                if (PjRuntime.currentThreadIsTheTarget("worker")) {
                     _OMP_TargetTaskRegion_11_in.run();
-                    timer = _OMP_TargetTaskRegion_11_in.timer;
                     panel = _OMP_TargetTaskRegion_11_in.panel;
+                    timer = _OMP_TargetTaskRegion_11_in.timer;
                 } else {
-                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_11_in);
+                    PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_11_in);
                 }
                 /*OpenMP Target region (#11) -- END */
 
@@ -891,6 +898,7 @@ class _OMP_TargetTaskRegion_12 extends pj.pr.task.TargetTask<Void>{
             {
                 panel.setImage(res);
                 guiChanged();
+                setCursor(Cursor.getDefaultCursor());
             }
             /****User Code END***/
         } catch(pj.pr.exceptions.OmpCancelCurrentTaskException e) {
@@ -942,20 +950,21 @@ class _OMP_TargetTaskRegion_12 extends pj.pr.task.TargetTask<Void>{
             Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
             while (it.hasNext()) {
                 ImagePanelItem panel = it.next();
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 /*OpenMP Target region (#13) -- START */
                 _OMP_TargetTaskRegion_13 _OMP_TargetTaskRegion_13_in = new _OMP_TargetTaskRegion_13();
-                _OMP_TargetTaskRegion_13_in.timer = timer;
                 _OMP_TargetTaskRegion_13_in.density = density;
+                _OMP_TargetTaskRegion_13_in.timer = timer;
                 _OMP_TargetTaskRegion_13_in.size = size;
                 _OMP_TargetTaskRegion_13_in.panel = panel;
-                if (PjRuntime.currentThreadIsTheTarget("edt")) {
+                if (PjRuntime.currentThreadIsTheTarget("worker")) {
                     _OMP_TargetTaskRegion_13_in.run();
-                    timer = _OMP_TargetTaskRegion_13_in.timer;
                     density = _OMP_TargetTaskRegion_13_in.density;
+                    timer = _OMP_TargetTaskRegion_13_in.timer;
                     size = _OMP_TargetTaskRegion_13_in.size;
                     panel = _OMP_TargetTaskRegion_13_in.panel;
                 } else {
-                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_13_in);
+                    PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_13_in);
                 }
                 /*OpenMP Target region (#13) -- END */
 
@@ -1041,6 +1050,7 @@ class _OMP_TargetTaskRegion_14 extends pj.pr.task.TargetTask<Void>{
             {
                 panel.setImage(res);
                 guiChanged();
+                setCursor(Cursor.getDefaultCursor());
             }
             /****User Code END***/
         } catch(pj.pr.exceptions.OmpCancelCurrentTaskException e) {
@@ -1060,28 +1070,6 @@ class _OMP_TargetTaskRegion_14 extends pj.pr.task.TargetTask<Void>{
 
     };
 
-    private Action actionBuildImageMosaic = new AbstractAction() {
-
-        private static final long serialVersionUID = 1L;
-
-        @Override
-        public void actionPerformed(ActionEvent arg0) {{
-            Timer timer = new Timer(getSelectedPanels().size(), "Build Image Mosaic");
-            Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
-            while (it.hasNext()) {
-                ImagePanelItem panel = it.next();
-                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                ImageCombo res = MosaicBuilder.buildImageMosaic(panel, palette, density);
-                panel.setImage(res);
-                guiChanged();
-                setCursor(Cursor.getDefaultCursor());
-                timer.taskComplete();
-            }
-        }
-        }
-
-    };
-
     private Action actionBuildPalette = new AbstractAction() {
 
         private static final long serialVersionUID = 1L;
@@ -1090,22 +1078,23 @@ class _OMP_TargetTaskRegion_14 extends pj.pr.task.TargetTask<Void>{
         public void actionPerformed(ActionEvent arg0) {{
             Timer timer = new Timer(getSelectedPanels().size(), "Build Palette");
             Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             while (it.hasNext()) {
                 ImagePanelItem panel = it.next();
                 /*OpenMP Target region (#15) -- START */
                 _OMP_TargetTaskRegion_15 _OMP_TargetTaskRegion_15_in = new _OMP_TargetTaskRegion_15();
-                _OMP_TargetTaskRegion_15_in.panel = panel;
                 _OMP_TargetTaskRegion_15_in.palette = palette;
-                _OMP_TargetTaskRegion_15_in.timer = timer;
                 _OMP_TargetTaskRegion_15_in.size = size;
-                if (PjRuntime.currentThreadIsTheTarget("edt")) {
+                _OMP_TargetTaskRegion_15_in.panel = panel;
+                _OMP_TargetTaskRegion_15_in.timer = timer;
+                if (PjRuntime.currentThreadIsTheTarget("worker")) {
                     _OMP_TargetTaskRegion_15_in.run();
-                    panel = _OMP_TargetTaskRegion_15_in.panel;
                     palette = _OMP_TargetTaskRegion_15_in.palette;
-                    timer = _OMP_TargetTaskRegion_15_in.timer;
                     size = _OMP_TargetTaskRegion_15_in.size;
+                    panel = _OMP_TargetTaskRegion_15_in.panel;
+                    timer = _OMP_TargetTaskRegion_15_in.timer;
                 } else {
-                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_15_in);
+                    PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_15_in);
                 }
                 /*OpenMP Target region (#15) -- END */
 
@@ -1181,6 +1170,7 @@ class _OMP_TargetTaskRegion_16 extends pj.pr.task.TargetTask<Void>{
             /****User Code BEGIN***/
             {
                 guiChanged();
+                setCursor(Cursor.getDefaultCursor());
             }
             /****User Code END***/
         } catch(pj.pr.exceptions.OmpCancelCurrentTaskException e) {
@@ -1197,6 +1187,28 @@ class _OMP_TargetTaskRegion_16 extends pj.pr.task.TargetTask<Void>{
 
 
 
+
+    };
+
+    private Action actionBuildImageMosaic = new AbstractAction() {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public void actionPerformed(ActionEvent arg0) {{
+            Timer timer = new Timer(getSelectedPanels().size(), "Build Image Mosaic");
+            Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
+            while (it.hasNext()) {
+                ImagePanelItem panel = it.next();
+                setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                ImageCombo res = MosaicBuilder.buildImageMosaic(panel, palette, density);
+                panel.setImage(res);
+                guiChanged();
+                setCursor(Cursor.getDefaultCursor());
+                timer.taskComplete();
+            }
+        }
+        }
 
     };
 

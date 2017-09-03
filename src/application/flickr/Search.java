@@ -127,15 +127,15 @@ public class Search {
                 list.add(pi);
                 /*OpenMP Target region (#0) -- START */
                 _OMP_TargetTaskRegion_0 _OMP_TargetTaskRegion_0_in = new _OMP_TargetTaskRegion_0();
-                _OMP_TargetTaskRegion_0_in.pi = pi;
                 _OMP_TargetTaskRegion_0_in.i = i;
                 _OMP_TargetTaskRegion_0_in.panel = panel;
+                _OMP_TargetTaskRegion_0_in.pi = pi;
                 _OMP_TargetTaskRegion_0_in.pl = pl;
                 if (PjRuntime.currentThreadIsTheTarget("edt")) {
                     _OMP_TargetTaskRegion_0_in.run();
-                    pi = _OMP_TargetTaskRegion_0_in.pi;
                     i = _OMP_TargetTaskRegion_0_in.i;
                     panel = _OMP_TargetTaskRegion_0_in.panel;
+                    pi = _OMP_TargetTaskRegion_0_in.pi;
                     pl = _OMP_TargetTaskRegion_0_in.pl;
                 } else {
                     PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_0_in);

@@ -273,20 +273,20 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
         SearchProjectPanel tthis = this;
         /*OpenMP Target region (#1) -- START */
         _OMP_TargetTaskRegion_1 _OMP_TargetTaskRegion_1_in = new _OMP_TargetTaskRegion_1();
-        _OMP_TargetTaskRegion_1_in.search = search;
-        _OMP_TargetTaskRegion_1_in.resPP = resPP;
-        _OMP_TargetTaskRegion_1_in.tthis = tthis;
-        _OMP_TargetTaskRegion_1_in.results = results;
-        _OMP_TargetTaskRegion_1_in.timer = timer;
         _OMP_TargetTaskRegion_1_in.currentOffset = currentOffset;
+        _OMP_TargetTaskRegion_1_in.search = search;
+        _OMP_TargetTaskRegion_1_in.timer = timer;
+        _OMP_TargetTaskRegion_1_in.results = results;
+        _OMP_TargetTaskRegion_1_in.tthis = tthis;
+        _OMP_TargetTaskRegion_1_in.resPP = resPP;
         if (PjRuntime.currentThreadIsTheTarget("worker")) {
             _OMP_TargetTaskRegion_1_in.run();
-            search = _OMP_TargetTaskRegion_1_in.search;
-            resPP = _OMP_TargetTaskRegion_1_in.resPP;
-            tthis = _OMP_TargetTaskRegion_1_in.tthis;
-            results = _OMP_TargetTaskRegion_1_in.results;
-            timer = _OMP_TargetTaskRegion_1_in.timer;
             currentOffset = _OMP_TargetTaskRegion_1_in.currentOffset;
+            search = _OMP_TargetTaskRegion_1_in.search;
+            timer = _OMP_TargetTaskRegion_1_in.timer;
+            results = _OMP_TargetTaskRegion_1_in.results;
+            tthis = _OMP_TargetTaskRegion_1_in.tthis;
+            resPP = _OMP_TargetTaskRegion_1_in.resPP;
         } else {
             PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_1_in);
         }
@@ -351,6 +351,7 @@ class _OMP_TargetTaskRegion_1 extends pj.pr.task.TargetTask<Void>{
                 /*OpenMP Target region (#2) -- END */
 
                 timer.taskComplete();
+                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }
             /****User Code END***/
         } catch(pj.pr.exceptions.OmpCancelCurrentTaskException e) {

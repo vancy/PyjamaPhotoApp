@@ -318,7 +318,7 @@ public class ImageProjectPanel extends ProjectPanel {
 		public void actionPerformed(ActionEvent arg0) {
 			Timer timer = new Timer(getSelectedPanels().size(), "Invert Colors");
 			Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
-			
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
        			//#omp target virtual(worker) shared(panel, timer) name_as(invert)
@@ -331,6 +331,7 @@ public class ImageProjectPanel extends ProjectPanel {
        					setCursor(Cursor.getDefaultCursor());
        				}
        				timer.taskComplete();
+       				setCursor(Cursor.getDefaultCursor());
        			}
 			}
 		}
@@ -342,11 +343,11 @@ public class ImageProjectPanel extends ProjectPanel {
 		public void actionPerformed(ActionEvent arg0) {
 			Timer timer = new Timer(getSelectedPanels().size(), "Blur");
 			Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-				
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
-				//#omp target virtual(edt) shared(panel, timer) nowait
+				//#omp target virtual(worker) shared(panel, timer) nowait
 				{
         			ImageCombo res = ImageManipulation.blur(panel);
         			//#omp target virtual(edt) shared(res,panel) await
@@ -355,6 +356,7 @@ public class ImageProjectPanel extends ProjectPanel {
         				guiChanged();
         			}
         			timer.taskComplete();
+        			setCursor(Cursor.getDefaultCursor());
 				}
 			}
 		}
@@ -367,11 +369,11 @@ public class ImageProjectPanel extends ProjectPanel {
 		public void actionPerformed(ActionEvent arg0) {
 			Timer timer = new Timer(getSelectedPanels().size(), "Sharpen");
 			Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
-			
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
 				
-				//#omp target virtual(edt) shared(panel, timer) nowait
+				//#omp target virtual(worker) shared(panel, timer) nowait
 				{
         			ImageCombo res = ImageManipulation.sharpen(panel);
         			//#omp target virtual(edt) shared(res, panel) await
@@ -380,6 +382,7 @@ public class ImageProjectPanel extends ProjectPanel {
         				guiChanged();
         			}
         			timer.taskComplete();
+        			setCursor(Cursor.getDefaultCursor());
 				}
 			}
 		}
@@ -401,19 +404,19 @@ public class ImageProjectPanel extends ProjectPanel {
 		public void actionPerformed(ActionEvent arg0) {
 			Timer timer = new Timer(getSelectedPanels().size(), "Edge Detect");
 			Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
-			//if (it.hasNext())
-				//isModified = true;
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
 
-				//#omp target virtual(edt) shared(panel, timer) nowait
+				//#omp target virtual(worker) shared(panel, timer) nowait
 				{
         			ImageCombo res = ImageManipulation.edgeDetect(panel);
         			//#omp target virtual(edt) shared(res, panel) await
         			{
         				panel.setImage(res);
         				guiChanged();
+        				setCursor(Cursor.getDefaultCursor());
         			}
         			timer.taskComplete();
 				}
@@ -449,18 +452,42 @@ public class ImageProjectPanel extends ProjectPanel {
 			Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
 			while (it.hasNext()) {
 				ImagePanelItem panel = it.next();
-
-				//#omp target virtual(edt) shared(panel, density, size, timer) nowait
+				setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+				//#omp target virtual(worker) shared(panel, density, size, timer) nowait
 				{
         			ImageCombo res = MosaicBuilder.buildMosaic(panel, density, size);
         			//#omp target virtual(edt) shared(res, panel) await
         			{
         				panel.setImage(res);
         				guiChanged();
+        				setCursor(Cursor.getDefaultCursor());
         			}
         			timer.taskComplete();
 				}
 				
+			}
+		}
+	};
+
+	private Action actionBuildPalette = new AbstractAction() {
+		private static final long serialVersionUID = 1L;
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			Timer timer = new Timer(getSelectedPanels().size(), "Build Palette");
+			Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
+			setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+			while (it.hasNext()) {
+				ImagePanelItem panel = it.next();
+				//#omp target virtual(worker) shared(size,panel,palette,timer) nowait
+				{
+        			palette = MosaicBuilder.buildMosaicPaletteItem(panel, palette, size);
+        			//#omp target virtual(edt) await
+        			{
+        				guiChanged();
+        				setCursor(Cursor.getDefaultCursor());
+        			}
+        			timer.taskComplete();
+				}			
 			}
 		}
 	};
@@ -511,27 +538,6 @@ public class ImageProjectPanel extends ProjectPanel {
 				setCursor(Cursor.getDefaultCursor());
 				timer.taskComplete();
 				
-			}
-		}
-	};
-
-	private Action actionBuildPalette = new AbstractAction() {
-		private static final long serialVersionUID = 1L;
-		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			Timer timer = new Timer(getSelectedPanels().size(), "Build Palette");
-			Iterator<ImagePanelItem> it = getSelectedPanels().iterator();
-			while (it.hasNext()) {
-				ImagePanelItem panel = it.next();
-				//#omp target virtual(edt) shared(size,panel,palette,timer) nowait
-				{
-        			palette = MosaicBuilder.buildMosaicPaletteItem(panel, palette, size);
-        			//#omp target virtual(edt) await
-        			{
-        				guiChanged();
-        			}
-        			timer.taskComplete();
-				}			
 			}
 		}
 	};
