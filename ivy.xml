@@ -9,5 +9,10 @@ Normally, no need to change it. -->
     </configurations>
 	<!-- Search for artifact info on http://search.maven.org/ -->
 	<dependencies>
+		<!--load all dependencies the project requires.-->
+		<dependency name="log4j" org="log4j" rev="1.2.17"></dependency>
+		<dependency name="scribe" org="org.scribe" rev="1.2.1"></dependency>
+		<dependency name="axis" org="org.apache.axis" rev="1.4"></dependency>
+		<dependency name="flickr4java" org="com.flickr4java" rev="2.16"></dependency> 
 	</dependencies>
 </ivy-module>

@@ -25,7 +25,7 @@
 			<include name="*.jar" />
 		</fileset>
 		<fileset dir="${lib.main.dir}">
-					<include name="*.jar" />
+			<include name="*.jar" />
 		</fileset>
 	</path>
 
@@ -75,8 +75,8 @@
 
 	<!-- target: resolve -->
     <target name="resolve" depends="" description="retrieve dependencies with ivy">
-        <ivy:retrieve conf="main" pattern="${lib.main.dir}/[artifact].[ext]"/>
-        <ivy:retrieve conf="test" pattern="${lib.test.dir}/[artifact].[ext]"/>
+        <ivy:retrieve conf="main" pattern="${lib.main.dir}/[artifact]-[revision](-[classifier]).[ext]"/>
+        <ivy:retrieve conf="test" pattern="${lib.test.dir}/[artifact]-[revision](-[classifier]).[ext]"/>
     </target>
 
     <!-- Change this version number for getting newer version of ivy -->
