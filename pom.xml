@@ -5,9 +5,14 @@
   	<groupId>com.uoa.parallelit.pyjama</groupId>
   	<artifactId>pyjama-photo-app</artifactId>
   	<packaging>jar</packaging>
-  	<version>1.0-SNAPSHOT</version>
+  	<version>1.0</version>
   	<name>Pyjama Photo Example App</name>
 	<url>http://parallelit.org</url>
+	
+	<properties>
+    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 		
 	<repositories>
     	<repository>
@@ -20,11 +25,9 @@
 	<dependencies>
 		<!-- load Pyjama library from the local lib folder -->
 		<dependency>
-	    	<groupId>Pyjama</groupId>
-	  	    <artifactId>nz.ac.auckland.parallel</artifactId>
-	 	    <version>2.2</version>
-	    	<scope>system</scope>
-	    	<systemPath>${project.basedir}/lib/Pyjama-2.2.0.jar</systemPath>
+	    	<groupId>nz.ac.auckland.parallel</groupId>
+	  	    <artifactId>Pyjama</artifactId>
+	 	    <version>2.3.0</version>
 		</dependency>
 		<!--load all dependencies the project requires.-->
 		<dependency>
@@ -51,14 +54,22 @@
 	
 	
 	<build>
+		<sourceDirectory>${project.basedir}/src</sourceDirectory>
+		<resources>
+      		<resource>
+        		<directory>${project.basedir}/res</directory>
+     	 	</resource>
+    	</resources>
+
 		<plugins>
+		    <!-- Compile the pj files into java files-->
 		    <plugin>
 		        <groupId>org.codehaus.mojo</groupId>
 		        <artifactId>exec-maven-plugin</artifactId>
 		        <version>1.6.0</version>
 		        <executions>
 		            <execution>
-		                <id>ptjava-gen</id>
+		                <id>pj-java-gen</id>
 		                <phase>process-sources</phase>
 		                <goals>
 		                    <goal>exec</goal>
@@ -66,50 +77,88 @@
 		                <configuration>
 		                    <executable>java</executable>
 		                    <arguments>
-		                        <argument>-classpath</argument>
-		                        <classpath>
-		                            <dependency>nz.ac.auckland.parallel:Pyjama</dependency>
-		                        </classpath>
-		                        <argument>Generate</argument>
-		                        <argument>src/main/java</argument>
+		                        <argument>-jar</argument>
+		                        <dependency>${project.basedir}/lib/Pyjama-2.3.0.jar</dependency>
+		                        <argument>-p2j</argument>
+		                        <argument>src</argument>
 		                    </arguments>
 		                </configuration>
 		            </execution>
 		        </executions>
 		    </plugin>
+			<!-- pack all dependencies into the jar -->
+			<plugin>
+        		<artifactId>maven-assembly-plugin</artifactId>
+       			<executions>
+         			<execution>
+            			<phase>package</phase>
+            			<goals>
+              				<goal>single</goal>
+            			</goals>
+          			</execution>
+        		</executions>
+        		<configuration>
+        			<archive>
+						<manifest>
+							<mainClass>application.MainFrame</mainClass>
+						</manifest>
+					</archive>
+          			<descriptorRefs>
+            			<descriptorRef>jar-with-dependencies</descriptorRef>
+          			</descriptorRefs>
+        		</configuration>
+      		</plugin>
+      		<!-- set the main class of the jar file -->
+		    <plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>application.MainFrame</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<!-- put resouce files into one specific folder in jar file -->
+			<plugin>
+    			<artifactId>maven-resources-plugin</artifactId>
+    			<configuration>
+        			<outputDirectory> ${project.build.outputDirectory}\res</outputDirectory>
+    			</configuration>
+    		</plugin>
 		</plugins>
+		
+		<!-- To define the plugin version in your parent POM -->
+		<pluginManagement>
+		    <plugins>
+		        <plugin>
+		            <groupId>org.eclipse.m2e</groupId>
+		            <artifactId>lifecycle-mapping</artifactId>
+		            <version>1.0.0</version>
+		            <configuration>
+		                <lifecycleMappingMetadata>
+		                    <pluginExecutions>
+		                        <pluginExecution>
+		                            <pluginExecutionFilter>
+		                                <groupId>org.codehaus.mojo</groupId>
+		                                <artifactId>exec-maven-plugin</artifactId>
+		                                <versionRange>[1.0.0,)</versionRange>
+		                                <goals>
+		                                    <goal>exec</goal>
+		                                </goals>
+		                            </pluginExecutionFilter>
+		                            <action>
+		                                <execute>
+		                                    <runOnIncremental>true</runOnIncremental>
+		                                </execute>
+		                            </action>
+		                        </pluginExecution>
+		                    </pluginExecutions>
+		                </lifecycleMappingMetadata>
+		            </configuration>
+		        </plugin>
+		    </plugins>
+		</pluginManagement>
 	</build>
-
-<!-- Separate section (to prevent Eclipse errors) 
-	<pluginManagement>
-	    <plugins>
-	        <plugin>
-	            <groupId>org.eclipse.m2e</groupId>
-	            <artifactId>lifecycle-mapping</artifactId>
-	            <version>1.0.0</version>
-	            <configuration>
-	                <lifecycleMappingMetadata>
-	                    <pluginExecutions>
-	                        <pluginExecution>
-	                            <pluginExecutionFilter>
-	                                <groupId>org.codehaus.mojo</groupId>
-	                                <artifactId>exec-maven-plugin</artifactId>
-	                                <versionRange>[1.0.0,)</versionRange>
-	                                <goals>
-	                                    <goal>exec</goal>
-	                                </goals>
-	                            </pluginExecutionFilter>
-	                            <action>
-	                                <execute>
-	                                    <runOnIncremental>true</runOnIncremental>
-	                                </execute>
-	                            </action>
-	                        </pluginExecution>
-	                    </pluginExecutions>
-	                </lifecycleMappingMetadata>
-	            </configuration>
-	        </plugin>
-	    </plugins>
-	</pluginManagement>
--->
 </project>

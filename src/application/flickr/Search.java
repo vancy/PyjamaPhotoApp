@@ -1,4 +1,4 @@
-//Pyjama compiler version:v2.2.0
+//Pyjama compiler version:v2.3.0
 package application.flickr;
 
 import java.awt.Image;
@@ -125,22 +125,22 @@ public class Search {
                 Image image = Search.getSquareImage(p);
                 PhotoWithImage pi = new PhotoWithImage(p, image);
                 list.add(pi);
-                /*OpenMP Target region (#0) -- START */
-                _OMP_TargetTaskRegion_0 _OMP_TargetTaskRegion_0_in = new _OMP_TargetTaskRegion_0();
-                _OMP_TargetTaskRegion_0_in.i = i;
-                _OMP_TargetTaskRegion_0_in.panel = panel;
-                _OMP_TargetTaskRegion_0_in.pi = pi;
-                _OMP_TargetTaskRegion_0_in.pl = pl;
+                /*OpenMP Target region (#16) -- START */
+                _OMP_TargetTaskRegion_16 _OMP_TargetTaskRegion_16_in = new _OMP_TargetTaskRegion_16();
+                _OMP_TargetTaskRegion_16_in.pl = pl;
+                _OMP_TargetTaskRegion_16_in.panel = panel;
+                _OMP_TargetTaskRegion_16_in.i = i;
+                _OMP_TargetTaskRegion_16_in.pi = pi;
                 if (PjRuntime.currentThreadIsTheTarget("edt")) {
-                    _OMP_TargetTaskRegion_0_in.run();
-                    i = _OMP_TargetTaskRegion_0_in.i;
-                    panel = _OMP_TargetTaskRegion_0_in.panel;
-                    pi = _OMP_TargetTaskRegion_0_in.pi;
-                    pl = _OMP_TargetTaskRegion_0_in.pl;
+                    _OMP_TargetTaskRegion_16_in.run();
+                    pl = _OMP_TargetTaskRegion_16_in.pl;
+                    panel = _OMP_TargetTaskRegion_16_in.panel;
+                    i = _OMP_TargetTaskRegion_16_in.i;
+                    pi = _OMP_TargetTaskRegion_16_in.pi;
                 } else {
-                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_0_in);
+                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_16_in);
                 }
-                /*OpenMP Target region (#0) -- END */
+                /*OpenMP Target region (#16) -- END */
 
                 PjRuntime.checkTaskCancellation();
 
@@ -152,13 +152,13 @@ public class Search {
         return null;
     }
     }
-static class _OMP_TargetTaskRegion_0 extends pj.pr.task.TargetTask<Void>{
+static class _OMP_TargetTaskRegion_16 extends pj.pr.task.TargetTask<Void>{
 
     //#BEGIN shared, private variables defined here
-    public SearchProjectPanel panel;
-    public PhotoList<?> pl;
-    public PhotoWithImage pi;
     public int i;
+    public PhotoWithImage pi;
+    public PhotoList<?> pl;
+    public SearchProjectPanel panel;
     //#END shared, private variables defined here
 
     private int OMP_state = 0;

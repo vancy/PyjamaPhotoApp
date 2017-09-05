@@ -1,4 +1,4 @@
-//Pyjama compiler version:v2.2.0
+//Pyjama compiler version:v2.3.0
 package application;
 
 import java.awt.BorderLayout;
@@ -271,31 +271,31 @@ public class SearchProjectPanel extends ProjectPanel implements ActionListener {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         List<PhotoWithImage> results = null;
         SearchProjectPanel tthis = this;
-        /*OpenMP Target region (#1) -- START */
-        _OMP_TargetTaskRegion_1 _OMP_TargetTaskRegion_1_in = new _OMP_TargetTaskRegion_1();
-        _OMP_TargetTaskRegion_1_in.currentOffset = currentOffset;
-        _OMP_TargetTaskRegion_1_in.search = search;
-        _OMP_TargetTaskRegion_1_in.timer = timer;
-        _OMP_TargetTaskRegion_1_in.results = results;
-        _OMP_TargetTaskRegion_1_in.tthis = tthis;
-        _OMP_TargetTaskRegion_1_in.resPP = resPP;
+        /*OpenMP Target region (#0) -- START */
+        _OMP_TargetTaskRegion_0 _OMP_TargetTaskRegion_0_in = new _OMP_TargetTaskRegion_0();
+        _OMP_TargetTaskRegion_0_in.search = search;
+        _OMP_TargetTaskRegion_0_in.currentOffset = currentOffset;
+        _OMP_TargetTaskRegion_0_in.tthis = tthis;
+        _OMP_TargetTaskRegion_0_in.resPP = resPP;
+        _OMP_TargetTaskRegion_0_in.timer = timer;
+        _OMP_TargetTaskRegion_0_in.results = results;
         if (PjRuntime.currentThreadIsTheTarget("worker")) {
-            _OMP_TargetTaskRegion_1_in.run();
-            currentOffset = _OMP_TargetTaskRegion_1_in.currentOffset;
-            search = _OMP_TargetTaskRegion_1_in.search;
-            timer = _OMP_TargetTaskRegion_1_in.timer;
-            results = _OMP_TargetTaskRegion_1_in.results;
-            tthis = _OMP_TargetTaskRegion_1_in.tthis;
-            resPP = _OMP_TargetTaskRegion_1_in.resPP;
+            _OMP_TargetTaskRegion_0_in.run();
+            search = _OMP_TargetTaskRegion_0_in.search;
+            currentOffset = _OMP_TargetTaskRegion_0_in.currentOffset;
+            tthis = _OMP_TargetTaskRegion_0_in.tthis;
+            resPP = _OMP_TargetTaskRegion_0_in.resPP;
+            timer = _OMP_TargetTaskRegion_0_in.timer;
+            results = _OMP_TargetTaskRegion_0_in.results;
         } else {
-            PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_1_in);
+            PjRuntime.submitTargetTask(Thread.currentThread(), "worker", _OMP_TargetTaskRegion_0_in);
         }
-        PjRuntime.storeTargetHandlerByName(_OMP_TargetTaskRegion_1_in, "search");
-        /*OpenMP Target region (#1) -- END */
+        PjRuntime.storeTargetHandlerByName(_OMP_TargetTaskRegion_0_in, "search");
+        /*OpenMP Target region (#0) -- END */
 
     }
     }
-class _OMP_TargetTaskRegion_2 extends pj.pr.task.TargetTask<Void>{
+class _OMP_TargetTaskRegion_1 extends pj.pr.task.TargetTask<Void>{
 
     //#BEGIN shared, private variables defined here
     public List<PhotoWithImage> results;
@@ -321,15 +321,15 @@ class _OMP_TargetTaskRegion_2 extends pj.pr.task.TargetTask<Void>{
 
 
 
-class _OMP_TargetTaskRegion_1 extends pj.pr.task.TargetTask<Void>{
+class _OMP_TargetTaskRegion_0 extends pj.pr.task.TargetTask<Void>{
 
     //#BEGIN shared, private variables defined here
+    public Timer timer;
+    public String search;
+    public int currentOffset;
+    public int resPP;
     public SearchProjectPanel tthis;
     public List<PhotoWithImage> results;
-    public String search;
-    public Timer timer;
-    public int resPP;
-    public int currentOffset;
     //#END shared, private variables defined here
 
     private int OMP_state = 0;
@@ -339,16 +339,16 @@ class _OMP_TargetTaskRegion_1 extends pj.pr.task.TargetTask<Void>{
             /****User Code BEGIN***/
             {
                 results = Search.search(search, resPP, currentOffset, tthis);
-                /*OpenMP Target region (#2) -- START */
-                _OMP_TargetTaskRegion_2 _OMP_TargetTaskRegion_2_in = new _OMP_TargetTaskRegion_2();
-                _OMP_TargetTaskRegion_2_in.results = results;
+                /*OpenMP Target region (#1) -- START */
+                _OMP_TargetTaskRegion_1 _OMP_TargetTaskRegion_1_in = new _OMP_TargetTaskRegion_1();
+                _OMP_TargetTaskRegion_1_in.results = results;
                 if (PjRuntime.currentThreadIsTheTarget("edt")) {
-                    _OMP_TargetTaskRegion_2_in.run();
-                    results = _OMP_TargetTaskRegion_2_in.results;
+                    _OMP_TargetTaskRegion_1_in.run();
+                    results = _OMP_TargetTaskRegion_1_in.results;
                 } else {
-                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_2_in);
+                    PjRuntime.submitTargetTask(Thread.currentThread(), "edt", _OMP_TargetTaskRegion_1_in);
                 }
-                /*OpenMP Target region (#2) -- END */
+                /*OpenMP Target region (#1) -- END */
 
                 timer.taskComplete();
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
